@@ -1,6 +1,6 @@
 # paperai: AI-Powered Literature Discovery and Review Engine for medical/scientific articles
 
-paperai builds an AI-Powered index over sets of medical and scientific articles. 
+paperai builds an AI-Powered index over sets of medical and scientific articles.
 
 ## Installation
 You can install paperai directly from GitHub using pip. Using a Python Virtual Environment is recommended.
@@ -10,7 +10,7 @@ You can install paperai directly from GitHub using pip. Using a Python Virtual E
 Python 3.6+ is supported
 
 ## Building a model
-paperai indexes models previously build with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases. 
+paperai indexes models previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
 To build an index for a SQLite articles database:
 
