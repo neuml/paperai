@@ -34,7 +34,7 @@ class Shell(Cmd):
     def default(self, line):
         Query.query(self.embeddings, self.db, line, None)
 
-def main(path):
+def main(path=None):
     """
     Shell execution loop.
 
