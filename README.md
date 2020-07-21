@@ -12,7 +12,7 @@ Python 3.6+ is supported
 ## Building a model
 paperai indexes models previously build with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases. 
 
-To build an index over a CORD-19 articles database:
+To build an index for a SQLite articles database:
 
     # Can optionally use pre-trained vectors
     # https://www.kaggle.com/davidmezzetti/cord19-fasttext-vectors#cord19-300d.magnitude
