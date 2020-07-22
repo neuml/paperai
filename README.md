@@ -1,6 +1,6 @@
-# paperai: AI-Powered Literature Discovery and Review Engine for medical/scientific articles
+# paperai: AI-powered literature discovery and review engine for medical/scientific articles
 
-paperai builds an AI-Powered index over sets of medical and scientific articles.
+paperai builds an AI-powered index over sets of medical and scientific articles.
 
 ## Installation
 You can install paperai directly from GitHub using pip. Using a Python Virtual Environment is recommended.
