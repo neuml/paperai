@@ -110,11 +110,8 @@ class Report(object):
         # Unpack metadata
         _, query, _ = metadata
 
-        if query == "*":
-            documents = Query.all(self.cur)
-        else:
-            # Get results grouped by document
-            documents = Query.documents(results, topn)
+        # Retrieve list of documents
+        documents = Query.all(self.cur) if query == "*" else Query.documents(results, topn)
 
         # Collect matching rows
         rows = []
