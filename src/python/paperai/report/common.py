@@ -107,8 +107,14 @@ class Report(object):
             results: search results
         """
 
-        # Get results grouped by document
-        documents = Query.documents(results, topn)
+        # Unpack metadata
+        _, query, _ = metadata
+
+        if query == "*":
+            documents = Query.all(self.cur)
+        else:
+            # Get results grouped by document
+            documents = Query.documents(results, topn)
 
         # Collect matching rows
         rows = []

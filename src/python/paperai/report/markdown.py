@@ -105,7 +105,7 @@ class Markdown(Report):
         columns["Study Population"] = Query.text(article[8]) if article[8] else ""
 
         # Top Matches
-        columns["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections])
+        columns["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
         columns["Entry"] = article[9] if article[9] else ""

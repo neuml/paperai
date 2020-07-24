@@ -97,6 +97,9 @@ class Query(object):
             search results
         """
 
+        if query == "*":
+            return []
+
         results = []
 
         # Get list of required tokens
@@ -172,6 +175,21 @@ class Query(object):
         # Get documents with top n best sections
         topn = sorted(documents, key=lambda k: max([x[0] for x in documents[k]]), reverse=True)[:topn]
         return {uid: documents[uid] for uid in topn}
+
+    @staticmethod
+    def all(cur):
+        """
+        Gets a list of all article ids.
+
+        Args:
+            cur: database cursor
+
+        Returns:
+            list of all ids as a dict
+        """
+
+        cur.execute("SELECT Id FROM articles")
+        return {row[0]: None for row in cur.fetchall()}
 
     @staticmethod
     def authors(authors):

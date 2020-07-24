@@ -79,7 +79,7 @@ class CSV(Report):
         columns["Sample Text"] = article[7]
 
         # Top Matches
-        columns["Matches"] = "\n\n".join([Query.text(text) for _, text in sections])
+        columns["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
         columns["Entry"] = article[9] if article[9] else ""
