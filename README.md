@@ -9,6 +9,8 @@ You can install paperai directly from GitHub using pip. Using a Python Virtual E
 
 Python 3.6+ is supported
 
+*Note: This project has dependencies that require compiling native code. Linux enviroments usually work without an issue. For Windows, see https://visualstudio.microsoft.com/visual-cpp-build-tools/*
+
 ## Building a model
 paperai indexes models previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
