@@ -196,13 +196,19 @@ class Embeddings(object):
         """
 
         pc = self.lsa.components_
+        factor = embeddings.dot(pc.transpose())
 
         # Apply LSA model
         # Calculation is different if n_components = 1
         if pc.shape[0] == 1:
-            embeddings -= embeddings.dot(pc.transpose()) * pc
+            embeddings -= factor * pc
+        elif len(embeddings.shape) > 1:
+            # Apply model on a row-wise basis to limit memory usage
+            for x in range(embeddings.shape[0]):
+                embeddings[x] -= factor[x].dot(pc)
         else:
-            embeddings -= embeddings.dot(pc.transpose()).dot(pc)
+            # Single embedding
+            embeddings -= factor.dot(pc)
 
     def normalize(self, embeddings):
         """
