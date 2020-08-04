@@ -122,9 +122,6 @@ class Report(object):
                              "FROM articles WHERE id = ?", [uid])
             article = self.cur.fetchone()
 
-            print("--------------------------")
-            print(article[1])
-
             # Calculate derived fields
             calculated = self.calculate(uid, metadata)
 

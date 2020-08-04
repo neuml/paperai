@@ -48,8 +48,7 @@ class Extractor(object):
         """
 
         # Retrieve indexed document text for article
-        #self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
-        self.cur.execute("SELECT Id, Name, Text FROM sections WHERE article = ?", [uid])
+        self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
 
         # Tokenize text
         sections, tokenlist = [], []
@@ -63,23 +62,12 @@ class Extractor(object):
         # Build question-context pairs
         names, questions, contexts, snippets = [], [], [], []
         for name, query, question, snippet in queue:
-            # Get list of required tokens
-            must = [token.strip("+") for token in query.split() if token.startswith("+")]
-
-            # Tokenize search query
             query = Tokenizer.tokenize(query)
-            
-            # List of matches 
             matches = []
 
             scores = self.embeddings.similarity(query, tokenlist)
             for x, score in enumerate(scores):
-                # Get section text
-                text = sections[x][1]
-
-                # Add result if all required tokens are present or there are not required tokens
-                if not must or all([token.lower() in text.lower() for token in must]):
-                    matches.append(sections[x] + (score,))
+                matches.append(sections[x] + (score,))
 
             # Build context using top n best matching sections
             topn = sorted(matches, key=lambda x: x[2], reverse=True)[:3]
@@ -113,10 +101,6 @@ class Extractor(object):
         for x, answer in enumerate(answers):
             # Extract answer
             value = answer["answer"]
-
-            print(questions[x])
-            print(contexts[x])
-            print(answer, "\n")
 
             # Resolve snippet if necessary
             if answer and snippets[x]:
