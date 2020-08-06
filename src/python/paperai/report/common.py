@@ -10,13 +10,14 @@ class Report(object):
     Methods to build reports from a series of queries
     """
 
-    def __init__(self, embeddings, db):
+    def __init__(self, embeddings, db, qa):
         """
         Creates a new report.
 
         Args:
             embeddings: embeddings index
             db: database connection
+            qa: qa model path
         """
 
         # Store references to embeddings index and open database cursor
@@ -27,7 +28,7 @@ class Report(object):
         self.names = []
 
         # Extractive question-answering model
-        self.extractor = Extractor(self.embeddings, self.cur, "NeuML/bert-small-cord19qa", False)
+        self.extractor = Extractor(self.embeddings, self.cur, qa if qa else "NeuML/bert-small-cord19qa", False)
 
     def build(self, queries, topn, output):
         """

@@ -16,26 +16,29 @@ class Execute(object):
     """
 
     @staticmethod
-    def create(render, embeddings, cur):
+    def create(render, embeddings, cur, qa):
         """
         Factory method to construct a Report.
 
         Args:
             render: report rendering format
+            embeddings: embeddings index
+            db: database connection
+            qa: qa model path
 
         Returns:
             Report
         """
 
         if render == "csv":
-            return CSV(embeddings, cur)
+            return CSV(embeddings, cur, qa)
         elif render == "md":
-            return Markdown(embeddings, cur)
+            return Markdown(embeddings, cur, qa)
 
         return None
 
     @staticmethod
-    def run(task, topn=None, render=None, path=None):
+    def run(task, topn=None, render=None, path=None, qa=None):
         """
         Reads a list of queries from a task file and builds a report.
 
@@ -43,7 +46,8 @@ class Execute(object):
             task: input task file
             topn: number of results
             render: report rendering format ("md" for markdown, "csv" for csv)
-            path: model path
+            path: embeddings model path
+            qa: qa model path
         """
 
         # Load model
@@ -56,7 +60,7 @@ class Execute(object):
         render = render if render else "md"
 
         # Create report object. Default to Markdown.
-        report = Execute.create(render, embeddings, db)
+        report = Execute.create(render, embeddings, db, qa)
 
         # Generate output filename
         outfile = os.path.join(outdir, "%s.%s" % (name, render))
