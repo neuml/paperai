@@ -16,7 +16,7 @@ class Execute(object):
     """
 
     @staticmethod
-    def create(render, embeddings, cur, qa):
+    def create(render, embeddings, db, qa):
         """
         Factory method to construct a Report.
 
@@ -31,9 +31,9 @@ class Execute(object):
         """
 
         if render == "csv":
-            return CSV(embeddings, cur, qa)
+            return CSV(embeddings, db, qa)
         elif render == "md":
-            return Markdown(embeddings, cur, qa)
+            return Markdown(embeddings, db, qa)
 
         return None
 
