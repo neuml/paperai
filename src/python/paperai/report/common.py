@@ -2,7 +2,11 @@
 Report module
 """
 
-from ..extractor import Extractor
+import regex as re
+
+from txtai.extractor import Extractor
+
+from ..index import Index
 from ..query import Query
 
 class Report(object):
@@ -28,7 +32,7 @@ class Report(object):
         self.names = []
 
         # Extractive question-answering model
-        self.extractor = Extractor(self.embeddings, self.cur, qa if qa else "NeuML/bert-small-cord19qa", False)
+        self.extractor = Extractor(self.embeddings, qa if qa else "NeuML/bert-small-cord19qa", False)
 
     def build(self, queries, topn, output):
         """
@@ -168,8 +172,17 @@ class Report(object):
 
                 questions.append((column["name"], query, question, snippet))
 
+        # Retrieve indexed document text for article
+        self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
+
+        # Get list of document text sections
+        sections = []
+        for sid, name, text in self.cur.fetchall():
+            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
+                sections.append((sid, text))
+
         # Add extraction fields
-        for name, value in self.extractor(uid, questions):
+        for name, value in self.extractor(sections, questions):
             fields[name] = value if value else ""
 
         return fields

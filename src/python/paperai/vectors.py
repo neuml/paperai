@@ -8,13 +8,10 @@ import sqlite3
 import sys
 import tempfile
 
-import fasttext
-import fasttext.util
-
-from pymagnitude import converter
+from txtai.vectors import WordVectors
+from txtai.tokenizer import Tokenizer
 
 from .models import Models
-from .tokenizer import Tokenizer
 
 class RowIterator(object):
     """
@@ -124,7 +121,7 @@ class Vectors(object):
     @staticmethod
     def run(path, size, mincount):
         """
-        Converts dbfile into a fastText model using pymagnitude's SQLite output format.
+        Builds a word vector model.
 
         Args:
             path: model path, if None uses default path
@@ -142,34 +139,14 @@ class Vectors(object):
         # Stream tokens to temporary file
         tokens = Vectors.tokens(dbfile)
 
-        # Train on tokens file using largest dimension size
-        model = fasttext.train_unsupervised(tokens, dim=size, minCount=mincount)
+        # Output file path
+        path = Models.vectorPath("cord19-%dd" % size, True)
+
+        # Build word vectors model
+        WordVectors.build(tokens, size, mincount, path)
 
         # Remove temporary tokens file
         os.remove(tokens)
-
-        # Output file path
-        print("Building %d dimension model" % size)
-        path = Models.vectorPath("cord19-%dd" %size, True)
-
-        # Output vectors in vec/txt format
-        with open(path + ".txt", "w") as output:
-            words = model.get_words()
-            output.write("%d %d\n" % (len(words), model.get_dimension()))
-
-            for word in words:
-                # Skip end of line token
-                if word != "</s>":
-                    vector = model.get_word_vector(word)
-                    data = ""
-                    for v in vector:
-                        data += " " + str(v)
-
-                    output.write(word + data + "\n")
-
-        # Build magnitude vectors database
-        print("Converting vectors to magnitude format")
-        converter.convert(path + ".txt", path + ".magnitude", subword=True)
 
 if __name__ == "__main__":
     # Create vector model

@@ -7,8 +7,7 @@ import itertools
 import networkx
 
 from nltk.corpus import stopwords
-
-from .tokenizer import Tokenizer
+from txtai.tokenizer import Tokenizer
 
 class Highlights(object):
     """

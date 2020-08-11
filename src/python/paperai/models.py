@@ -6,7 +6,7 @@ import os
 import os.path
 import sqlite3
 
-from .embeddings import Embeddings
+from txtai.embeddings import Embeddings
 
 class Models(object):
     """

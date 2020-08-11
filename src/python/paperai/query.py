@@ -9,9 +9,10 @@ import sys
 import html2text
 import mdv
 
+from txtai.tokenizer import Tokenizer
+
 from .highlights import Highlights
 from .models import Models
-from .tokenizer import Tokenizer
 
 class Query(object):
     """

@@ -8,9 +8,10 @@ import sys
 
 import regex as re
 
-from .embeddings import Embeddings
+from txtai.embeddings import Embeddings
+from txtai.tokenizer import Tokenizer
+
 from .models import Models
-from .tokenizer import Tokenizer
 
 class Index(object):
     """
@@ -73,13 +74,12 @@ class Index(object):
         Returns:
             embeddings index
         """
-
         embeddings = Embeddings({"path": vectors,
                                  "scoring": "bm25",
                                  "pca": 3})
 
         # Build scoring index if scoring method provided
-        if embeddings.config["scoring"]:
+        if embeddings.config.get("scoring"):
             embeddings.score(Index.stream(dbfile))
 
         # Build embeddings index
