@@ -3,7 +3,11 @@
 paperai builds an AI-powered index over sets of medical and scientific papers.
 
 ## Installation
-You can install paperai directly from GitHub using pip. Using a Python Virtual Environment is recommended.
+The easiest way to install is via pip and PyPI
+
+    pip install paperai
+
+You can also install paperai directly from GitHub. Using a Python Virtual Environment is recommended.
 
     pip install git+https://github.com/neuml/paperai
 
@@ -26,21 +30,21 @@ To build an index for a SQLite articles database:
 
 The model will be stored in ~/.cord19
 
-### Building a report file
+## Building a report file
 A report file is simply a markdown file created from a list of queries. An example report call:
 
     python -m paperai.report tasks/risk-factors.yml
 
 Once complete a file named tasks/risk-factors.md will be created.
 
-### Running queries
+## Running queries
 The fastest way to run queries is to start a paperai shell
 
     paperai
 
 A prompt will come up. Queries can be typed directly into the console.
 
-### Tech Overview
+## Tech Overview
 The tech stack is built on Python and creates a sentence embeddings index with FastText + BM25. Background on this method can be found in this [Medium article](https://towardsdatascience.com/building-a-sentence-embedding-index-with-fasttext-and-bm25-f07e7148d240) and an existing repository using this method [codequestion](https://github.com/neuml/codequestion).
 
 The model is a combination of the sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. FastText vectors are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce most relevant results.
