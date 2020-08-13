@@ -6,7 +6,6 @@ import itertools
 
 import networkx
 
-from nltk.corpus import stopwords
 from txtai.tokenizer import Tokenizer
 
 class Highlights(object):
@@ -15,13 +14,10 @@ class Highlights(object):
     """
 
     # Domain specific stop list
-    DOMAIN_STOP_WORDS = {"abstract", "al", "article", "arxiv", "author", "biorxiv", "copyright", "da", "dei", "del", "dell", "della",
-                         "delle", "di", "doi", "et", "fig", "figure", "funder", "holder", "http", "https", "il", "la", "le",
-                         "license", "medrxiv", "non", "org", "peer", "peer-reviewed", "permission", "preprint", "publication",
-                         "pubmed", "reserved", "reviewed", "rights", "si", "una", "used", "using"}
-
-    # Combine NLTK and domain stop words together
-    STOP_WORDS = set(stopwords.words("english")) | DOMAIN_STOP_WORDS
+    STOP_WORDS = {"abstract", "al", "article", "arxiv", "author", "biorxiv", "copyright", "da", "dei", "del", "dell", "della",
+                  "delle", "di", "doi", "et", "fig", "figure", "funder", "holder", "http", "https", "il", "la", "le",
+                  "license", "medrxiv", "non", "org", "peer", "peer-reviewed", "permission", "preprint", "publication",
+                  "pubmed", "reserved", "reviewed", "rights", "si", "una", "used", "using"}
 
     @staticmethod
     def build(sections, topn):
