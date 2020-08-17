@@ -74,9 +74,11 @@ class Index(object):
         Returns:
             embeddings index
         """
+
         embeddings = Embeddings({"path": vectors,
                                  "scoring": "bm25",
-                                 "pca": 3})
+                                 "pca": 3,
+                                 "quantize": True})
 
         # Build scoring index if scoring method provided
         if embeddings.config.get("scoring"):
