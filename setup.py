@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
     DESCRIPTION = f.read()
 
 setup(name="paperai",
-      version="1.2.1",
+      version="1.3.0",
       author="NeuML",
       description="AI-powered literature discovery and review engine for medical/scientific papers",
       long_description=DESCRIPTION,
@@ -32,7 +32,7 @@ setup(name="paperai",
           "networkx>=2.4",
           "PyYAML>=5.3",
           "regex>=2020.5.14",
-          "txtai>=1.0.0",
+          "txtai>=1.1.0",
       ],
       classifiers=[
           "License :: OSI Approved :: Apache Software License",
