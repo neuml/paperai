@@ -13,7 +13,7 @@ You can also install paperai directly from GitHub. Using a Python Virtual Enviro
 
 Python 3.6+ is supported
 
-If running on Windows, [check out this link for possible install issues](https://github.com/neuml/txtai#notes-for-windows).
+Check out [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) to help resolve environment-specific install issues.
 
 ## Building a model
 paperai indexes models previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
