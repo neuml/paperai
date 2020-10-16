@@ -1,6 +1,14 @@
 # paperai: AI-powered literature discovery and review engine for medical/scientific papers
 
-paperai builds an AI-powered index over sets of medical and scientific papers.
+paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai is used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge.
+
+paperai builds an index over medical articles to assist in analysis and data discovery. With the CORD-19 challenge, a series of COVID-19 related research topics were explored to identify relevant articles and help find answers to key scientific questions. paperai can be applied to other medical and scientific research domains.
+
+paperai and/or NeuML has been recognized in the following articles:
+
+- [CORD-19 Kaggle Challenge Awards](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge/discussion/161447)
+- [Machine-Learning Experts Delve Into 47,000 Papers on Coronavirus Family](https://www.wsj.com/articles/machine-learning-experts-delve-into-47-000-papers-on-coronavirus-family-11586338201)
+- [Data scientists assist medical researchers in the fight against COVID-19](https://cloud.google.com/blog/products/ai-machine-learning/how-kaggle-data-scientists-help-with-coronavirus)
 
 ## Installation
 The easiest way to install is via pip and PyPI
