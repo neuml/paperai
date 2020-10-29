@@ -40,7 +40,7 @@ class Index(object):
         query = Index.SECTION_QUERY + " AND tags is not null"
 
         if maxsize > 0:
-            query += "AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT %d)" % maxsize
+            query += " AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT %d)" % maxsize
 
         # Run the query
         cur.execute(query)
