@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
     DESCRIPTION = f.read()
 
 setup(name="paperai",
-      version="1.3.0",
+      version="1.4.0",
       author="NeuML",
       description="AI-powered literature discovery and review engine for medical/scientific papers",
       long_description=DESCRIPTION,
