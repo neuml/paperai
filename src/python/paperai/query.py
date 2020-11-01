@@ -104,7 +104,7 @@ class Query(object):
         results = []
 
         # Get list of required tokens
-        must = [token.strip("+") for token in query.split() if token.startswith("+")]
+        must = [token.strip("+") for token in query.split() if token.startswith("+") and len(token) > 1]
 
         # Tokenize search query
         query = Tokenizer.tokenize(query)
