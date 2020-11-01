@@ -98,7 +98,7 @@ class Index(object):
         return embeddings
 
     @staticmethod
-    def run(path, vectors, maxsize):
+    def run(path, vectors, maxsize=0):
         """
         Executes an index run.
 
