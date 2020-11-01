@@ -119,7 +119,7 @@ class Vectors(object):
         return tokens
 
     @staticmethod
-    def run(path, size, mincount):
+    def run(path, size, mincount, output):
         """
         Builds a word vector model.
 
@@ -127,6 +127,7 @@ class Vectors(object):
             path: model path, if None uses default path
             size: dimensions for fastText model
             mincount: minimum number of times a token must appear in input
+            output: output file path, if None uses default path
         """
 
         # Default path if not provided
@@ -139,15 +140,17 @@ class Vectors(object):
         # Stream tokens to temporary file
         tokens = Vectors.tokens(dbfile)
 
-        # Output file path
-        path = Models.vectorPath("cord19-%dd" % size, True)
+        if not output:
+            # Output file path
+            output = Models.vectorPath("cord19-%dd" % size, True)
 
         # Build word vectors model
-        WordVectors.build(tokens, size, mincount, path)
+        WordVectors.build(tokens, size, mincount, output)
 
         # Remove temporary tokens file
         os.remove(tokens)
 
 if __name__ == "__main__":
     # Create vector model
-    Vectors.run(sys.argv[1] if len(sys.argv) > 1 else None, 300, 4)
+    Vectors.run(sys.argv[1] if len(sys.argv) > 1 else None, 300, 4,
+                sys.argv[2] if len(sys.argv) > 2 else None)
