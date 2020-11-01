@@ -55,21 +55,6 @@ class Models(object):
         return path
 
     @staticmethod
-    def testPath(source, name):
-        """
-        Builds path to a test data file.
-
-        Args:
-            source: test source name
-            name: file name
-
-        Returns:
-            path
-        """
-
-        return os.path.join(Models.basePath(), "test", source, name)
-
-    @staticmethod
     def vectorPath(name, create=False):
         """
         Vector path for name
