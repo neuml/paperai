@@ -1,0 +1,17 @@
+# Travis CI build script
+os: linux
+dist: xenial
+language: python
+jobs:
+  include:
+    - name: "Linux"
+      script:
+        - make data coverage
+      after_success:
+        - coveralls
+install:
+  - pip3 install -U pip wheel coverage coveralls
+  - pip3 install .
+  - python3 --version || python --version
+script:
+  - make data test
