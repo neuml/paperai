@@ -143,18 +143,68 @@ class Report(object):
 
     def calculate(self, uid, metadata):
         """
-        Builds a dict of calculated fields for a given document.
+        Builds a dict of calculated fields for a given document. This method calculates
+        constant field columns and derived query columns. Derived query columns run through
+        an embedding search and either run an additional QA query to extract a value or
+        use the top n embedding search matches.
 
         Args:
-            uid: document id
+            uid: article id
             metadata: query metadata
 
         Returns:
             {name: value} containing derived column values
         """
 
+        # Parse column parameters
+        fields, params = self.params(metadata)
+
+        # Stores embedding query only and full QA column definitions
+        queries, questions = [], []
+
+        # Retrieve indexed document text for article
+        sections = self.sections(uid)
+
+        for name, query, question, snippet, _, _, matches in params:
+            if matches:
+                queries.append((name, query, matches))
+            else:
+                questions.append((name, query, question, snippet))
+
+        # Only execute embeddings queries for columns with matches set
+        for name, query, matches in queries:
+            # Run query
+            topn = self.extractor.query(sections, [query])[0]
+
+            # Get topn text matches
+            topn = [text for _, text, _ in topn][:matches]
+
+            # Join results into String and return
+            fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
+
+        # Add extraction fields
+        for name, value in self.extractor(sections, questions):
+            # Resolvesthe full value based on column parameters
+            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
+
+        return fields
+
+    def params(self, metadata):
+        """
+        Process and prepare parameters using input metadata.
+
+        Args:
+            metadata: query metadata
+
+        Returns:
+            fields, params - constant field values, query parameters for query columns
+        """
+
+        # Derived field values
         fields = {}
-        questions = []
+
+        # Query column parameters
+        params = []
 
         # Unpack metadata
         _, _, columns = metadata
@@ -168,24 +218,17 @@ class Report(object):
                 # Query variable substitutions
                 query = self.variables(column["query"], metadata)
                 question = self.variables(column["question"], metadata) if "question" in column else query
+
+                # Additional context parameters
+                section = column["section"] if "section" in column else False
+                surround = column["surround"] if "surround" in column else 0
+                matches = column["matches"] if "matches" in column else 0
                 snippet = column["snippet"] if "snippet" in column else False
+                snippet = True if section or surround else snippet
 
-                questions.append((column["name"], query, question, snippet))
+                params.append((column["name"], query, question, snippet, section, surround, matches))
 
-        # Retrieve indexed document text for article
-        self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
-
-        # Get list of document text sections
-        sections = []
-        for sid, name, text in self.cur.fetchall():
-            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
-                sections.append((sid, text))
-
-        # Add extraction fields
-        for name, value in self.extractor(sections, questions):
-            fields[name] = value if value else ""
-
-        return fields
+        return fields, params
 
     def variables(self, value, metadata):
         """
@@ -209,6 +252,99 @@ class Report(object):
             value = value.replace("$NAME", name).replace("$QUERY", query)
 
         return value
+
+    def sections(self, uid):
+        """
+        Retrieves all sections as list for article with given uid.
+
+        Args:
+            uid: article id
+
+        Returns:
+            list of section text elements
+        """
+
+        # Retrieve indexed document text for article
+        self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
+
+        # Get list of document text sections
+        sections = []
+        for sid, name, text in self.cur.fetchall():
+            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
+                sections.append((sid, text))
+
+        return sections
+
+    def resolve(self, params, sections, uid, name, value):
+        """
+        Fully resolves a value from an extractor call.
+
+         - If section=True, this method pull the full section text
+         - If surround is specified, this method will pull the surrounding text
+         - Otherwise, the original value is returned
+
+        Args:
+            params: query parameters
+            sections: section text
+            uid: article id
+            name: column name
+            value: initial query value after running through extractor process
+
+        Returns:
+            resolved value
+        """
+
+        # Get all column parameters
+        index = [params.index(x) for x in params if x[0] == name][0]
+        _, _, _, _, section, surround, _ = params[index]
+
+        if value:
+            # Find matching section
+            sid = [sid for sid, text in sections if value in text]
+
+            if sid:
+                sid = sid[0]
+
+                if section:
+                    # Get full text for matching subsection
+                    value = self.subsection(uid, sid)
+                elif surround:
+                    value = self.surround(uid, sid, surround)
+
+        return value
+
+    def subsection(self, uid, sid):
+        """
+        Extracts all subsection text for columns with section=True.
+
+        Args:
+            uid: article id
+            sid: section id
+
+        Returns:
+            full text for matching section
+        """
+
+        self.cur.execute("SELECT Text FROM sections WHERE article = ? AND name = (SELECT name FROM sections WHERE id = ?)", [uid, sid])
+        return " ".join([x[0] for x in self.cur.fetchall()])
+
+    def surround(self, uid, sid, size):
+        """
+        Extracts surrounding text for section with specified id.
+
+        Args:
+            uid: article id
+            sid: section id
+            size: number of surrounding lines to extract from each side
+
+        Returns:
+            matching text with surrounding context
+        """
+
+        self.cur.execute("SELECT Text FROM sections WHERE article = ? AND id in (SELECT id FROM sections WHERE id >= ? AND id <= ?) AND " + \
+                         "name = (SELECT name FROM sections WHERE id = ?)", [uid, sid - size, sid + size, sid])
+
+        return " ".join([x[0] for x in self.cur.fetchall()])
 
     def cleanup(self, outfile):
         """

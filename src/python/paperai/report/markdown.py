@@ -91,6 +91,9 @@ class Markdown(Report):
         # Append Publication if available. Assume preprint otherwise and show preprint source.
         title += "<br/>%s" % (article[3] if article[3] else article[4])
 
+        # Source
+        columns["Source"] = article[4]
+
         # Title + Publication if available
         columns["Study"] = title
 
