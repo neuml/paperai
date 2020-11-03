@@ -31,7 +31,7 @@ class CSV(Report):
         if self.csvout:
             self.csvout.close()
 
-        self.csvout = open(os.path.join(os.path.dirname(output.name), "%s.csv" % task), "w")
+        self.csvout = open(os.path.join(os.path.dirname(output.name), "%s.csv" % task), "w", newline="")
         self.writer = csv.writer(self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     def write(self, row):
