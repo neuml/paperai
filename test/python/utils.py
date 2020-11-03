@@ -25,5 +25,5 @@ class Utils(object):
             MD5 hash
         """
 
-        with open(path, "rb") as data:
-            return hashlib.md5(data.read()).hexdigest()
+        with open(path, "r") as data:
+            return hashlib.md5(data.read().encode()).hexdigest()
