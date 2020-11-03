@@ -2,6 +2,7 @@
 Report module tests
 """
 
+import os
 import unittest
 
 # pylint: disable=E0401
@@ -14,6 +15,7 @@ class TestReport(unittest.TestCase):
     Report tests
     """
 
+    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testReport1(self):
         """
         Runs test queries from report1.yml test file
@@ -32,6 +34,7 @@ class TestReport(unittest.TestCase):
         for name, value in hashes:
             self.assertEqual(Utils.hashfile(Utils.PATH + "/" + name), value)
 
+    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testReport2(self):
         """
         Runs test queries from report2.yml test file

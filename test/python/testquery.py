@@ -2,6 +2,7 @@
 Query module tests
 """
 
+import os
 import unittest
 
 from contextlib import redirect_stdout
@@ -25,6 +26,7 @@ class TestQuery(unittest.TestCase):
         # Build embeddings index
         Index.run(Utils.PATH, Utils.VECTORFILE)
 
+    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testRun(self):
         """
         Test query execution
