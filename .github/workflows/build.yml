@@ -33,6 +33,8 @@ jobs:
           python -c 'import nltk; nltk.download("punkt")'
           python --version
           make data coverage
+        env:
+          PYTHONUTF8=1
 
       - name: Test Coverage
         run: coveralls
