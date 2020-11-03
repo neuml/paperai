@@ -26,4 +26,7 @@ class Utils(object):
         """
 
         with open(path, "r") as data:
-            return hashlib.md5(data.read().encode()).hexdigest()
+            # Read file into string, standardize newlines
+            data = data.read().replace("\r\n", "\n")
+
+            return hashlib.md5(data.encode()).hexdigest()
