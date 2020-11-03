@@ -31,7 +31,7 @@ class TestQuery(unittest.TestCase):
         """
 
         # Execute query
-        with open(Utils.PATH + "/query.txt", "w") as query:
+        with open(Utils.PATH + "/query.txt", "w", newline="\n") as query:
             with redirect_stdout(query):
                 Query.run("risk factors studied", 10, Utils.PATH)
 
