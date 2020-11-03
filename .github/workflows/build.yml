@@ -18,6 +18,7 @@ jobs:
       - name: Build
         run: |
           pip install nltk
+          python --version
           python -c 'import nltk; nltk.download("punkt")'
         env:
           PYTHONUTF8: 1
