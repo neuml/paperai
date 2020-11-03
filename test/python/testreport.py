@@ -23,9 +23,9 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report1.yml", 10, "csv", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report1.yml", 10, "md", Utils.PATH, None)
 
-        hashes = [("Age.csv", "841aa2fae519f93194ff3f504fa8077a"),
-                  ("Heart Disease.csv", "81f09414bb7cfcbd7eedd44e3e612e9c"),
-                  ("Heart Failure.csv", "7237afb2784bd4f7850c8ad7c9f7ff88"),
+        hashes = [("Age.csv", "a840643fa1dd0fa43e00091a44880fb9"),
+                  ("Heart Disease.csv", "6faff786d5a6b7fb1617a1057f973c58"),
+                  ("Heart Failure.csv", "20a6801161f3302d640323003a79f6c8"),
                   ("Report1.md", "69cbf92ca92c45ef78d519aed2e59ca1")]
 
         # Check file hashes
@@ -41,10 +41,10 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report2.yml", 10, "csv", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report2.yml", 10, "md", Utils.PATH, None)
 
-        hashes = [("Match.csv", "3238acd2d7975275665901519030f828"),
-                  ("MatchSurround.csv", "fde1f069b6e443d8dfe48a753116e6b8"),
-                  ("Section.csv", "30770f6b5ba27334a373a41c8ed6ab0f"),
-                  ("Surround.csv", "c14ef9347f983a3d54a5a0e653572e3a"),
+        hashes = [("Match.csv", "2def38a008f33f25d7ab4a763d159e80"),
+                  ("MatchSurround.csv", "e9f581d19b8802822f47261bce0e91b1"),
+                  ("Section.csv", "7ae8b295f0d959ba12410807db7b7e48"),
+                  ("Surround.csv", "fed9fb4249bf2f73fa9822753d359207"),
                   ("Report2.md", "9218fe80fe5e9fdd50c5719f54c52061")]
 
         # Check file hashes
