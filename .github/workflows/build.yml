@@ -19,6 +19,6 @@ jobs:
         run: |
           pip install nltk
           python --version
-          python -c 'import nltk; nltk.download("punkt")'
+          python -c 'import nltk; nltk.download(u"punkt")'
         env:
           PYTHONUTF8: 1
