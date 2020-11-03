@@ -34,7 +34,7 @@ jobs:
           python --version
           make data coverage
         env:
-          PYTHONUTF8=1
+          PYTHONUTF8: 1
 
       - name: Test Coverage
         run: coveralls
