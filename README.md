@@ -45,6 +45,8 @@ To build an index for a SQLite articles database:
 
 The model will be stored in ~/.cord19
 
+See the [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) notebook for a comprehensive example of paperai in action.
+
 ## Building a report file
 A report file is simply a markdown file created from a list of queries. An example report call:
 
