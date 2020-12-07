@@ -80,10 +80,10 @@ class Markdown(Report):
         self.write(output, "|%s|" % headers)
 
     def buildRow(self, article, sections, calculated):
-        columns = {}
+        row = {}
 
         # Date
-        columns["Date"] = Query.date(article[0]) if article[0] else ""
+        row["Date"] = Query.date(article[0]) if article[0] else ""
 
         # Title
         title = "[%s](%s)" % (article[1], self.encode(article[2]))
@@ -92,32 +92,32 @@ class Markdown(Report):
         title += "<br/>%s" % (article[3] if article[3] else article[4])
 
         # Source
-        columns["Source"] = article[4]
+        row["Source"] = article[4]
 
         # Title + Publication if available
-        columns["Study"] = title
+        row["Study"] = title
 
         # Study Type
-        columns["Study Type"] = Query.design(article[5])
+        row["Study Type"] = Query.design(article[5])
 
         # Sample Size
         sample = Query.sample(article[6], article[7])
-        columns["Sample Size"] = sample if sample else ""
+        row["Sample Size"] = sample if sample else ""
 
         # Study Population
-        columns["Study Population"] = Query.text(article[8]) if article[8] else ""
+        row["Study Population"] = Query.text(article[8]) if article[8] else ""
 
         # Top Matches
-        columns["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections]) if sections else ""
+        row["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
-        columns["Entry"] = article[9] if article[9] else ""
+        row["Entry"] = article[9] if article[9] else ""
 
         # Merge in calculated fields
-        columns.update(calculated)
+        row.update(calculated)
 
         # Escape | characters embedded within columns
-        return {column: self.column(columns[column]) for column in columns}
+        return {column: self.column(row[column]) for column in row}
 
     def writeRow(self, output, row):
         self.write(output, "|%s|" % "|".join(row))

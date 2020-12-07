@@ -184,7 +184,7 @@ class Report(object):
 
         # Add extraction fields
         for name, value in self.extractor(sections, questions):
-            # Resolvesthe full value based on column parameters
+            # Resolves the full value based on column parameters
             fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
         return fields

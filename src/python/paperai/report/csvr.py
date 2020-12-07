@@ -52,45 +52,45 @@ class CSV(Report):
         self.write(self.names)
 
     def buildRow(self, article, sections, calculated):
-        columns = {}
+        row = {}
 
         # Date
-        columns["Date"] = Query.date(article[0]) if article[0] else ""
+        row["Date"] = Query.date(article[0]) if article[0] else ""
 
         # Study
-        columns["Study"] = article[1]
+        row["Study"] = article[1]
 
         # Study Link
-        columns["Study Link"] = article[2]
+        row["Study Link"] = article[2]
 
         # Journal
-        columns["Journal"] = article[3] if article[3] else article[4]
+        row["Journal"] = article[3] if article[3] else article[4]
 
         # Source
-        columns["Source"] = article[4]
+        row["Source"] = article[4]
 
         # Study Type
-        columns["Study Type"] = Query.design(article[5])
+        row["Study Type"] = Query.design(article[5])
 
         # Sample Size
-        columns["Sample Size"] = article[6]
+        row["Sample Size"] = article[6]
 
         # Study Population
-        columns["Study Population"] = Query.text(article[8] if article[8] else article[7])
+        row["Study Population"] = Query.text(article[8] if article[8] else article[7])
 
         # Sample Text
-        columns["Sample Text"] = article[7]
+        row["Sample Text"] = article[7]
 
         # Top Matches
-        columns["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
+        row["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
-        columns["Entry"] = article[9] if article[9] else ""
+        row["Entry"] = article[9] if article[9] else ""
 
         # Merge in calculated fields
-        columns.update(calculated)
+        row.update(calculated)
 
-        return columns
+        return row
 
     def writeRow(self, output, row):
         self.write(row)
