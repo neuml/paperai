@@ -4,6 +4,7 @@ Report factory module
 
 import os.path
 
+from .annotate import Annotate
 from .csvr import CSV
 from .markdown import Markdown
 from .task import Task
@@ -16,7 +17,7 @@ class Execute(object):
     """
 
     @staticmethod
-    def create(render, embeddings, db, qa):
+    def create(render, embeddings, db, qa, indir):
         """
         Factory method to construct a Report.
 
@@ -25,12 +26,15 @@ class Execute(object):
             embeddings: embeddings index
             db: database connection
             qa: qa model path
+            indir: path to input directory containing source files
 
         Returns:
             Report
         """
 
-        if render == "csv":
+        if render == "ant":
+            return Annotate(embeddings, db, qa, indir)
+        elif render == "csv":
             return CSV(embeddings, db, qa)
         elif render == "md":
             return Markdown(embeddings, db, qa)
@@ -38,16 +42,17 @@ class Execute(object):
         return None
 
     @staticmethod
-    def run(task, topn=None, render=None, path=None, qa=None):
+    def run(task, topn=None, render=None, path=None, qa=None, indir=None):
         """
         Reads a list of queries from a task file and builds a report.
 
         Args:
             task: input task file
             topn: number of results
-            render: report rendering format ("md" for markdown, "csv" for csv)
+            render: report rendering format ("md" for markdown, "csv" for csv, "ant" for pdf annotation)
             path: embeddings model path
             qa: qa model path
+            indir: path to input directory containing source files
         """
 
         # Load model
@@ -60,7 +65,7 @@ class Execute(object):
         render = render if render else "md"
 
         # Create report object. Default to Markdown.
-        report = Execute.create(render, embeddings, db, qa)
+        report = Execute.create(render, embeddings, db, qa, indir)
 
         # Generate output filename
         outfile = os.path.join(outdir, "%s.%s" % (name, render))
