@@ -9,7 +9,7 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to filter papers with specified criteria. Reports powered by extractive question answering are run to identify answers to key questions within sets of medical/scientific papers.
+paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
 
 paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge. paperai and/or NeuML has been recognized in the following articles:
 
@@ -32,13 +32,13 @@ See this [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) 
 
 ## Examples
 
-The following notebooks demonstrate the full functionality of paperai. 
+The following notebooks demonstrate the capabilities provided by paperai.
 
 ### Notebooks
 
 | Notebook     |      Description      |
 |:----------|:-------------|
-| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Generates paperai-based submissions for CORD-19 Challenge |
+| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Generates paperai-based submissions for the CORD-19 Challenge |
 | [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
 
 ## Building a model
