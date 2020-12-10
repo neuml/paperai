@@ -53,3 +53,21 @@ class TestReport(unittest.TestCase):
         # Check file hashes
         for name, value in hashes:
             self.assertEqual(Utils.hashfile(Utils.PATH + "/" + name), value)
+
+    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
+    def testReport3(self):
+        """
+        Runs test queries from report3.yml test file
+        """
+
+        # Execute report
+        Execute.run(Utils.PATH + "/report3.yml", 1, "csv", Utils.PATH, None)
+        Execute.run(Utils.PATH + "/report3.yml", 1, "md", Utils.PATH, None)
+        Execute.run(Utils.PATH + "/report3.yml", 1, "ant", Utils.PATH, None, Utils.PATH)
+
+        hashes = [("AI.csv", "b47e96639a210d2089a5bd4e7e7bfc98"),
+                  ("Report3.md", "1a47340bc135fc086160c62f8731edee")]
+
+        # Check file hashes
+        for name, value in hashes:
+            self.assertEqual(Utils.hashfile(Utils.PATH + "/" + name), value)
