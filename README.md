@@ -9,7 +9,7 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to identify subsets of papers matching specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
+paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to filter papers with specified criteria. Reports powered by extractive question answering are run to identify answers to key questions within sets of medical/scientific papers.
 
 paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge. paperai and/or NeuML has been recognized in the following articles:
 
@@ -28,7 +28,7 @@ You can also install paperai directly from GitHub. Using a Python Virtual Enviro
 
 Python 3.6+ is supported
 
-Check out [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) to help resolve environment-specific install issues.
+See this [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) to help resolve environment-specific install issues.
 
 ## Examples
 
@@ -42,7 +42,7 @@ The following notebooks demonstrate the full functionality of paperai.
 | [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
 
 ## Building a model
-paperai indexes models previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
+paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
 To build an index for a SQLite articles database:
 
@@ -57,17 +57,17 @@ To build an index for a SQLite articles database:
 The model will be stored in ~/.cord19
 
 ## Building a report file
-A report file is simply a markdown file created from a list of queries. An example report call:
+Reports support generating output in multiple formats. An example report call:
 
     python -m paperai.report tasks/risk-factors.yml
 
 The following report formats are supported:
 
-- CSV - Renders a CSV report. Columns and questions are extracted from articles with the results stored in a CSV file.
-- Markdown - Renders a Markdown report. Columns and questions are extracted from articles with the results stored in a Markdown file.
-- Annotation - Columns and questions are extracted from articles with the results annotated over the original PDF files. Requires passing in a path with the original PDF files.
+- Markdown (Default) - Renders a Markdown report. Columns and answers are extracted from articles with the results stored in a Markdown file.
+- CSV - Renders a CSV report. Columns and answers are extracted from articles with the results stored in a CSV file.
+- Annotation - Columns and answers are extracted from articles with the results annotated over the original PDF files. Requires passing in a path with the original PDF files.
 
-Once complete a file named tasks/risk-factors.md will be created.
+In the example above, a file named tasks/risk-factors.md will be created.
 
 ## Running queries
 The fastest way to run queries is to start a paperai shell
