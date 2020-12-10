@@ -38,7 +38,7 @@ The following notebooks demonstrate the capabilities provided by paperai.
 
 | Notebook     |      Description      |
 |:----------|:-------------|
-| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Generates paperai-based submissions for the CORD-19 Challenge |
+| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Builds paperai-based submissions for the CORD-19 Challenge |
 | [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
 
 ## Building a model
