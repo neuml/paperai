@@ -9,11 +9,9 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai is used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge.
+paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to identify subsets of papers matching specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
 
-paperai builds an index over medical articles to assist in analysis and data discovery. With the CORD-19 challenge, a series of COVID-19 related research topics were explored to identify relevant articles and help find answers to key scientific questions. paperai can be applied to other medical and scientific research domains.
-
-paperai and/or NeuML has been recognized in the following articles:
+paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge. paperai and/or NeuML has been recognized in the following articles:
 
 - [CORD-19 Kaggle Challenge Awards](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge/discussion/161447)
 - [Machine-Learning Experts Delve Into 47,000 Papers on Coronavirus Family](https://www.wsj.com/articles/machine-learning-experts-delve-into-47-000-papers-on-coronavirus-family-11586338201)
@@ -32,6 +30,17 @@ Python 3.6+ is supported
 
 Check out [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) to help resolve environment-specific install issues.
 
+## Examples
+
+The following notebooks demonstrate the full functionality of paperai. 
+
+### Notebooks
+
+| Notebook     |      Description      |
+|:----------|:-------------|------:|
+| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Main notebook that drove submissions for CORD-19 Challenge |
+| [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
+
 ## Building a model
 paperai indexes models previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
@@ -47,12 +56,16 @@ To build an index for a SQLite articles database:
 
 The model will be stored in ~/.cord19
 
-See the [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) notebook for a comprehensive example of paperai in action.
-
 ## Building a report file
 A report file is simply a markdown file created from a list of queries. An example report call:
 
     python -m paperai.report tasks/risk-factors.yml
+
+The following report formats are supported:
+
+- CSV - Renders a CSV report. Columns and questions are extracted from articles with the results stored in a CSV file.
+- Markdown - Renders a Markdown report. Columns and questions are extracted from articles with the results stored in a Markdown file.
+- Annotation - Columns and questions are extracted from articles with the results annotated over the original PDF files. Requires passing in a path with the original PDF files.
 
 Once complete a file named tasks/risk-factors.md will be created.
 
@@ -64,9 +77,9 @@ The fastest way to run queries is to start a paperai shell
 A prompt will come up. Queries can be typed directly into the console.
 
 ## Tech Overview
-The tech stack is built on Python and creates a sentence embeddings index with FastText + BM25. Background on this method can be found in this [Medium article](https://towardsdatascience.com/building-a-sentence-embedding-index-with-fasttext-and-bm25-f07e7148d240) and an existing repository using this method [codequestion](https://github.com/neuml/codequestion).
+The tech stack is built on Python and creates a sentence embeddings index with FastText + BM25. Background on this method can be found in this [Medium article](https://towardsdatascience.com/building-a-sentence-embedding-index-with-fasttext-and-bm25-f07e7148d240). 
 
-The model is a combination of the sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. FastText vectors are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce most relevant results.
+The model is a combination of a sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. FastText vectors are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce the most relevant results.
 
 Multiple entry points exist to interact with the model.
 
