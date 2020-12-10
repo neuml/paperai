@@ -7,6 +7,8 @@
 [![Build Status](https://github.com/neuml/paperai/workflows/build/badge.svg)](https://github.com/neuml/paperai/actions?query=workflow%3Abuild)
 [![Coverage Status](https://img.shields.io/coveralls/github/neuml/paperai)](https://coveralls.io/github/neuml/paperai?branch=master)
 
+![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
+
 paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai is used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge.
 
 paperai builds an index over medical articles to assist in analysis and data discovery. With the CORD-19 challenge, a series of COVID-19 related research topics were explored to identify relevant articles and help find answers to key scientific questions. paperai can be applied to other medical and scientific research domains.
