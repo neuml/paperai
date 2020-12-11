@@ -9,7 +9,7 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
+paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai helps automate tedious literature reviews allowing researchers to focus on their core work. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
 
 paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19), winning multiple awards in the CORD-19 Kaggle challenge.
 
