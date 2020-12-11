@@ -11,7 +11,7 @@
 
 paperai is an AI-powered literature discovery and review engine for medical/scientific papers. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
 
-paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19) dataset, winning multiple awards in the CORD-19 Kaggle challenge. paperai and/or NeuML has been recognized in the following articles:
+paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19), winning multiple awards in the CORD-19 Kaggle challenge. paperai and/or NeuML has been recognized in the following articles:
 
 - [CORD-19 Kaggle Challenge Awards](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge/discussion/161447)
 - [Machine-Learning Experts Delve Into 47,000 Papers on Coronavirus Family](https://www.wsj.com/articles/machine-learning-experts-delve-into-47-000-papers-on-coronavirus-family-11586338201)
