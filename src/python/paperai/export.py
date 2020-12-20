@@ -14,7 +14,7 @@ import regex as re
 from .index import Index
 from .models import Models
 
-class Export(object):
+class Export():
     """
     Exports database rows into a text file line-by-line.
     """
