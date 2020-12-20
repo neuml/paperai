@@ -44,7 +44,7 @@ class Highlights(object):
 
             # Compare text to existing results, look for highly unique results
             # This finds results that are important but not repetitive
-            unique = all([Highlights.jaccardIndex(t, tokens) <= 0.2 for _, t in results])
+            unique = all(Highlights.jaccardIndex(t, tokens) <= 0.2 for _, t in results)
             if unique:
                 results.append((uid, tokens))
 

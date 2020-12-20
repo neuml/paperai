@@ -118,7 +118,7 @@ class Query(object):
                 sid, text = cur.fetchone()
 
                 # Add result if all required tokens are present or there are not required tokens
-                if not must or all([token.lower() in text.lower() for token in must]):
+                if not must or all(token.lower() in text.lower() for token in must):
                     # Save result
                     results.append((uid, score, sid, text))
 
