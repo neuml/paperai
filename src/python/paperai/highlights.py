@@ -8,7 +8,7 @@ import networkx
 
 from txtai.tokenizer import Tokenizer
 
-class Highlights(object):
+class Highlights():
     """
     Methods to extract highlights from a list of text sections.
     """
