@@ -32,7 +32,7 @@ setup(name="paperai",
           "networkx>=2.4",
           "PyYAML>=5.3",
           "regex>=2020.5.14",
-          "txtai>=1.4.0",
+          "txtai>=2.0.0",
           "txtmarker>=1.0.0"
       ],
       classifiers=[

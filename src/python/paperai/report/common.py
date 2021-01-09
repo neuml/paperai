@@ -164,6 +164,7 @@ class Report(object):
 
         # Retrieve indexed document text for article
         sections = self.sections(uid)
+        texts = [text for _, text in sections]
 
         for name, query, question, snippet, _, _, matches in params:
             if matches:
@@ -174,7 +175,7 @@ class Report(object):
         # Only execute embeddings queries for columns with matches set
         for name, query, matches in queries:
             # Run query
-            topn = self.extractor.query(sections, [query])[0]
+            topn = self.extractor.query([query], texts)[0]
 
             # Get topn text matches
             topn = [text for _, text, _ in topn][:matches]
@@ -183,7 +184,7 @@ class Report(object):
             fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
 
         # Add extraction fields
-        for name, value in self.extractor(sections, questions):
+        for name, value in self.extractor(questions, texts):
             # Resolves the full value based on column parameters
             fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
@@ -265,7 +266,7 @@ class Report(object):
         """
 
         # Retrieve indexed document text for article
-        self.cur.execute(Index.SECTION_QUERY + " AND article = ?", [uid])
+        self.cur.execute(Index.SECTION_QUERY + " AND article = ? ORDER BY id", [uid])
 
         # Get list of document text sections
         sections = []
