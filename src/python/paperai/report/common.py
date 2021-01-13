@@ -32,7 +32,7 @@ class Report(object):
         self.names = []
 
         # Extractive question-answering model
-        self.extractor = Extractor(self.embeddings, qa if qa else "NeuML/bert-small-cord19qa", False)
+        self.extractor = Extractor(self.embeddings, qa if qa else "NeuML/bert-small-cord19qa")
 
     def build(self, queries, topn, output):
         """
