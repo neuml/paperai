@@ -30,7 +30,7 @@ You can also install paperai directly from GitHub. Using a Python Virtual Enviro
 
 Python 3.6+ is supported
 
-See this [troubleshooting link](https://github.com/neuml/txtai#troubleshooting) to help resolve environment-specific install issues.
+See [this link](https://github.com/neuml/txtai#installation) to help resolve environment-specific install issues.
 
 ## Examples
 
