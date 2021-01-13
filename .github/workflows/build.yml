@@ -35,7 +35,7 @@ jobs:
           PYTHONUTF8: 1
 
       - name: Test Coverage
-        run: coveralls
+        run: coveralls --service=github
         if: matrix.os == 'ubuntu-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
