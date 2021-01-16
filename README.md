@@ -48,15 +48,30 @@ paperai indexes databases previously built with [paperetl](https://github.com/ne
 
 To build an index for a SQLite articles database:
 
-    # Can optionally use pre-trained vectors
-    # https://www.kaggle.com/davidmezzetti/cord19-fasttext-vectors#cord19-300d.magnitude
-    # Default location: ~/.cord19/vectors/cord19-300d.magnitude
+1. Download pre-trained vectors
+
+    ```bash
+    mkdir -p ~/.cord19/vectors
+    wget -N https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz -P ~/.cord19/vectors
+    gunzip ~/.cord19/vectors/cord19-300d.magnitude.gz
+    ```
+
+    A full vector model build can optionally be run with the following command.
+
+    ```bash
     python -m paperai.vectors
+    ```
 
-    # Build embeddings index
+    [CORD-19 fastText vectors](https://www.kaggle.com/davidmezzetti/cord19-fasttext-vectors) are also available on Kaggle.
+
+2. Build embeddings index
+
+    ```bash
     python -m paperai.index
+    ```
 
-The model will be stored in ~/.cord19
+The paperai.index process takes two optional arguments, the model path and the vector file path. The default model location is ~/.cord19 if
+no parameters are passed in.
 
 ## Building a report file
 Reports support generating output in multiple formats. An example report call:
