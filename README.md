@@ -27,6 +27,8 @@
     </a>
 </p>
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
 paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai helps automate tedious literature reviews allowing researchers to focus on their core work. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
