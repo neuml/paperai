@@ -68,20 +68,20 @@ The following notebooks demonstrate the capabilities provided by paperai.
 ## Building a model
 paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
-To build an index for a SQLite articles database:
+The following sections show how to build an index for a SQLite articles database.
 
-1. Download pre-trained vectors
+This example assumes the database and model path is cord19/models. Substitute as appropriate.
+
+1. Download [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
 
     ```bash
-    mkdir -p ~/.cord19/vectors
-    wget -N https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz -P ~/.cord19/vectors
-    gunzip ~/.cord19/vectors/cord19-300d.magnitude.gz
+    scripts/getvectors.sh cord19/vectors
     ```
 
     A full vector model build can optionally be run with the following command.
 
     ```bash
-    python -m paperai.vectors
+    python -m paperai.vectors cord19/models
     ```
 
     [CORD-19 fastText vectors](https://www.kaggle.com/davidmezzetti/cord19-fasttext-vectors) are also available on Kaggle.
@@ -89,7 +89,7 @@ To build an index for a SQLite articles database:
 2. Build embeddings index
 
     ```bash
-    python -m paperai.index
+    python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
     ```
 
 The paperai.index process takes two optional arguments, the model path and the vector file path. The default model location is ~/.cord19 if
@@ -98,7 +98,7 @@ no parameters are passed in.
 ## Building a report file
 Reports support generating output in multiple formats. An example report call:
 
-    python -m paperai.report tasks/risk-factors.yml
+    python -m paperai.report tasks/risk-factors.yml 50 md cord19/models
 
 The following report formats are supported:
 
@@ -111,7 +111,7 @@ In the example above, a file named tasks/risk-factors.md will be created.
 ## Running queries
 The fastest way to run queries is to start a paperai shell
 
-    paperai
+    paperai cord19/models
 
 A prompt will come up. Queries can be typed directly into the console.
 
