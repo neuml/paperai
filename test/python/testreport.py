@@ -28,7 +28,7 @@ class TestReport(unittest.TestCase):
         hashes = [("Age.csv", "a840643fa1dd0fa43e00091a44880fb9"),
                   ("Heart Disease.csv", "6faff786d5a6b7fb1617a1057f973c58"),
                   ("Heart Failure.csv", "20a6801161f3302d640323003a79f6c8"),
-                  ("Report1.md", "69cbf92ca92c45ef78d519aed2e59ca1")]
+                  ("Report1.md", "52ef046c36b6a25975921d89bfe65896")]
 
         # Check file hashes
         for name, value in hashes:
