@@ -6,7 +6,7 @@ import datetime
 import re
 import sys
 
-import html2text
+import html2markdown
 import mdv
 
 from txtai.tokenizer import Tokenizer
@@ -18,6 +18,27 @@ class Query(object):
     """
     Methods to query an embeddings index.
     """
+
+    @staticmethod
+    def markdown(text):
+        """
+        Converts html text to markdown.
+
+        Args:
+            text: html text
+
+        Returns:
+            text as markdown
+        """
+
+        # Remove rel attributes as they are not supported by html2markdown
+        text = re.sub(r' rel=".+?">', ">", text)
+
+        # Convert html to markdown
+        text = html2markdown.convert(text)
+
+        # Decode [<>&] characters
+        return text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
 
     @staticmethod
     def escape(text):
@@ -68,11 +89,8 @@ class Query(object):
         """
 
         if html:
-            # Convert HTML
-            parser = html2text.HTML2Text()
-            parser.body_width = 0
-            text = parser.handle(text)
-
+            # Convert html to markdown
+            text = Query.markdown(text)
             text = Query.escape(text)
 
         text = mdv.main(text, theme=theme, c_theme="953.3567", cols=180, tab_length=tab_length)
