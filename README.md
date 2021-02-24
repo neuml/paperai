@@ -54,6 +54,27 @@ Python 3.6+ is supported
 
 See [this link](https://github.com/neuml/txtai#installation) to help resolve environment-specific install issues.
 
+### Docker
+
+A Dockerfile with commands to install paperai, all dependencies and scripts is available in this repository.
+
+Clone this git repository and run the following to build and run the Docker image.
+
+```bash
+docker build -t paperai -f docker/Dockerfile .
+docker run --name paperai --rm -it paperai
+```
+
+This will bring up a paperai command shell. Standard Docker commands can be used to copy files over or commands can be run directly in the shell to retrieve input content. All scripts in the following examples are available in this environment.
+
+[paperetl's Dockerfile](https://github.com/neuml/paperetl#docker) can be combined with this Dockerfile to have a single image that can index and query content. The files from the paperetl project scripts directory needs to be placed in paperai's scripts directory. The paperetl Dockerfile also needs to be copied over (it's referenced as paperetl.Dockerfile here).
+
+```bash
+docker build -t base -f docker/Dockerfile .
+docker build -t paperai --build-arg BASE_IMAGE=base -f docker/paperetl.Dockerfile .
+docker run --name paperai --rm -it paperai
+```
+
 ## Examples
 
 The following notebooks demonstrate the capabilities provided by paperai.
