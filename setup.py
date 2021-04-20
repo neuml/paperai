@@ -28,7 +28,7 @@ setup(name="paperai",
       },
       install_requires=[
           "html2markdown>=0.1.7",
-          "mdv>=1.7.4",
+          "mdv3>=2.0.1",
           "networkx>=2.4",
           "PyYAML>=5.3",
           "regex>=2020.5.14",
