@@ -101,7 +101,7 @@ class Query(object):
         return text.strip()
 
     @staticmethod
-    def search(embeddings, cur, query, topn):
+    def search(embeddings, cur, query, topn, threshold):
         """
         Executes an embeddings search for the input query. Each returned result is resolved
         to the full section row.
@@ -111,6 +111,7 @@ class Query(object):
             cur: database cursor
             query: query text
             topn: number of documents to return
+            threshold: require at least this score to include result
 
         Returns:
             search results
@@ -119,24 +120,32 @@ class Query(object):
         if query == "*":
             return []
 
+        # Default threshold if None
+        threshold = threshold if threshold is not None else 0.6
+
         results = []
 
-        # Get list of required tokens
+        # Get list of required and prohibited tokens
         must = [token.strip("+") for token in query.split() if token.startswith("+") and len(token) > 1]
+        mnot = [token.strip("-") for token in query.split() if token.startswith("-") and len(token) > 1]
 
         # Tokenize search query
         query = Tokenizer.tokenize(query)
 
         # Retrieve topn * 5 to account for duplicate matches
         for uid, score in embeddings.search(query, topn * 5):
-            if score >= 0.6:
+            if score >= threshold:
                 cur.execute("SELECT Article, Text FROM sections WHERE id = ?", [uid])
 
                 # Get matching row
                 sid, text = cur.fetchone()
 
-                # Add result if all required tokens are present or there are not required tokens
-                if not must or all([token.lower() in text.lower() for token in must]):
+                # Add result if:
+                #   - all required tokens are present or there are not required tokens AND
+                #   - all prohibited tokens are not present or there are not prohibited tokens
+                if (not must or all([token.lower() in text.lower() for token in must])) and (
+                    not mnot or all([token.lower() not in text.lower() for token in mnot])
+                ):
                     # Save result
                     results.append((uid, score, sid, text))
 
@@ -278,10 +287,6 @@ class Query(object):
             # Remove http links
             text = re.sub(r"http.+?\s", " ", text)
 
-            # Remove boilerplate text
-            text = re.sub(r"doi\s?:\s?(bioRxiv|medRxiv) preprint", " ", text)
-            text = text.replace("All Rights Reserved", " ")
-
         return text
 
     @staticmethod
@@ -319,7 +324,7 @@ class Query(object):
         return "[%s] %s" % (size, Query.text(text)) if size else Query.text(text)
 
     @staticmethod
-    def query(embeddings, db, query, topn):
+    def query(embeddings, db, query, topn, threshold):
         """
         Executes a query against the embeddings model.
 
@@ -328,6 +333,7 @@ class Query(object):
             db: open SQLite database
             query: query string
             topn: number of query results
+            threshold: query match score threshold
         """
 
         # Default to 10 results if not specified
@@ -338,7 +344,7 @@ class Query(object):
         print(Query.render("#Query: %s" % query, theme="729.8953") + "\n")
 
         # Query for best matches
-        results = Query.search(embeddings, cur, query, topn)
+        results = Query.search(embeddings, cur, query, topn, threshold)
 
         # Extract top sections as highlights
         print(Query.render("# Highlights"))
@@ -374,7 +380,7 @@ class Query(object):
             print()
 
     @staticmethod
-    def run(query, topn=None, path=None):
+    def run(query, topn=None, path=None, threshold=None):
         """
         Executes a query against an index.
 
@@ -382,17 +388,21 @@ class Query(object):
             query: input query
             topn: number of results
             path: model path
+            threshold: query match score threshold
         """
 
         # Load model
         embeddings, db = Models.load(path)
 
         # Query the database
-        Query.query(embeddings, db, query, topn)
+        Query.query(embeddings, db, query, topn, threshold)
 
         # Free resources
         Models.close(db)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        Query.run(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else None, sys.argv[3] if len(sys.argv) > 3 else None)
+        Query.run(sys.argv[1],
+                  int(sys.argv[2]) if len(sys.argv) > 2 else None,
+                  sys.argv[3] if len(sys.argv) > 3 else None,
+                  float(sys.argv[4]) if len(sys.argv) > 4 else None)

@@ -34,13 +34,14 @@ class Report(object):
         # Extractive question-answering model
         self.extractor = Extractor(self.embeddings, qa if qa else "NeuML/bert-small-cord19qa")
 
-    def build(self, queries, topn, output):
+    def build(self, queries, topn, threshold, output):
         """
         Builds a report using a list of input queries
 
         Args:
             queries: queries to execute
             topn: number of documents to return
+            threshold: query match score threshold
             output: output I/O object
         """
 
@@ -58,7 +59,7 @@ class Report(object):
             self.separator(output)
 
             # Query for best matches
-            results = Query.search(self.embeddings, self.cur, query, topn)
+            results = Query.search(self.embeddings, self.cur, query, topn, threshold)
 
             # Generate highlights section
             self.section(output, "Highlights")

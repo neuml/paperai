@@ -42,7 +42,7 @@ class Execute(object):
         return None
 
     @staticmethod
-    def run(task, topn=None, render=None, path=None, qa=None, indir=None):
+    def run(task, topn=None, render=None, path=None, qa=None, indir=None, threshold=None):
         """
         Reads a list of queries from a task file and builds a report.
 
@@ -53,6 +53,7 @@ class Execute(object):
             path: embeddings model path
             qa: qa model path
             indir: path to input directory containing source files
+            threshold: query match score threshold
         """
 
         # Load model
@@ -73,7 +74,7 @@ class Execute(object):
         # Stream report to file
         with open(outfile, "w") as output:
             # Build the report
-            report.build(queries, topn, output)
+            report.build(queries, topn, threshold, output)
 
         # Free any resources
         report.cleanup(outfile)

@@ -7,6 +7,7 @@ import sqlite3
 import sys
 
 import regex as re
+import yaml
 
 from txtai.embeddings import Embeddings
 from txtai.tokenizer import Tokenizer
@@ -70,23 +71,44 @@ class Index(object):
         db.close()
 
     @staticmethod
+    def config(vectors):
+        """
+        Builds embeddings configuration.
+
+        Args:
+            vectors: path to word vectors or configuration
+
+        Returns:
+            configuration
+        """
+
+        # Default vectors
+        if not vectors:
+            vectors = Models.vectorPath("cord19-300d.magnitude")
+
+        # Read YAML index configuration
+        if vectors.endswith(".yml"):
+            with open(vectors, "r") as f:
+                return yaml.safe_load(f)
+
+        return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
+
+    @staticmethod
     def embeddings(dbfile, vectors, maxsize):
         """
         Builds a sentence embeddings index.
 
         Args:
             dbfile: input SQLite file
-            vectors: vector path
+            vectors: path to vectors file or configuration
             maxsize: maximum number of documents to process
 
         Returns:
             embeddings index
         """
 
-        embeddings = Embeddings({"path": vectors,
-                                 "scoring": "bm25",
-                                 "pca": 3,
-                                 "quantize": True})
+        # Read config and create Embeddings instance
+        embeddings = Embeddings(Index.config(vectors))
 
         # Build scoring index if scoring method provided
         if embeddings.config.get("scoring"):
@@ -104,7 +126,7 @@ class Index(object):
 
         Args:
             path: model path, if None uses default path
-            vectors: vector path, if None uses default path
+            vectors: path to vectors file or configuration, if None uses default path
             maxsize: maximum number of documents to process
         """
 
@@ -113,10 +135,6 @@ class Index(object):
             path = Models.modelPath()
 
         dbfile = os.path.join(path, "articles.sqlite")
-
-        # Default vectors
-        if not vectors:
-            vectors = Models.vectorPath("cord19-300d.magnitude")
 
         print("Building new model")
         embeddings = Index.embeddings(dbfile, vectors, maxsize)
