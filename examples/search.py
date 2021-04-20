@@ -1,5 +1,5 @@
 """
-Build txtai workflows.
+Search a paperai index.
 
 Requires streamlit to be installed.
   pip install streamlit
