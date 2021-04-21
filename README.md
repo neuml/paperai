@@ -77,7 +77,7 @@ docker run --name paperai --rm -it paperai
 
 ## Examples
 
-The following notebooks demonstrate the capabilities provided by paperai.
+The following notebooks and applications demonstrate the capabilities provided by paperai.
 
 ### Notebooks
 
@@ -85,6 +85,12 @@ The following notebooks demonstrate the capabilities provided by paperai.
 |:----------|:-------------|
 | [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Builds paperai-based submissions for the CORD-19 Challenge |
 | [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
+
+### Applications
+
+| Application  | Description  |
+|:----------|:-------------|
+| [Search](https://github.com/neuml/paperai/blob/master/examples/search.py) | Search a paperai index. Set query parameters, execute searches and display results. |
 
 ## Building a model
 paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
