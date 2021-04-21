@@ -8,7 +8,6 @@ import unittest
 from contextlib import redirect_stdout
 
 # pylint: disable=E0401
-from paperai.index import Index
 from paperai.query import Query
 
 from utils import Utils
@@ -17,14 +16,6 @@ class TestQuery(unittest.TestCase):
     """
     Query tests
     """
-
-    def setUp(self):
-        """
-        Create embedding index for tests
-        """
-
-        # Build embeddings index
-        Index.run(Utils.PATH, Utils.VECTORFILE)
 
     @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testRun(self):
