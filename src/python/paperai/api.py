@@ -10,6 +10,10 @@ import txtai.api
 from paperai.query import Query
 
 class API(txtai.api.API):
+    """
+    Extended API on top of txtai to return enriched query results.
+    """
+
     def search(self, query, request):
         """
         Extends txtai API to enrich results with content.
@@ -24,23 +28,23 @@ class API(txtai.api.API):
 
         if self.embeddings:
             dbfile = os.path.join(self.config["path"], "articles.sqlite")
-            topn = int(request.query_params.get("topn", 10))
-            threshold = float(request.query_params.get("threshold", 0.6))
+            limit = self.limit(request.query_params.get("limit"))
+            threshold = float(request.query_params["threshold"]) if "threshold" in request.query_params else None
 
             with sqlite3.connect(dbfile) as db:
                 cur = db.cursor()
 
                 # Query for best matches
-                results = Query.search(self.embeddings, cur, query, topn, threshold)
+                results = Query.search(self.embeddings, cur, query, limit, threshold)
 
                 # Get results grouped by document
-                documents = Query.documents(results, topn)
+                documents = Query.documents(results, limit)
 
                 articles = []
 
                 # Print each result, sorted by max score descending
                 for uid in sorted(documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True):
-                    cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference " + 
+                    cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference " +
                                 "FROM articles WHERE id = ?", [uid])
                     article = cur.fetchone()
 
@@ -54,3 +58,5 @@ class API(txtai.api.API):
                     articles.append(article)
 
                 return articles
+
+        return None
