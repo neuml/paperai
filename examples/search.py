@@ -1,8 +1,8 @@
 """
 Search a paperai index.
 
-Requires streamlit to be installed.
-  pip install streamlit
+Requires streamlit and lxml to be installed.
+  pip install streamlit lxml
 """
 
 import os
@@ -11,6 +11,8 @@ import sys
 
 import pandas as pd
 import streamlit as st
+
+from lxml.html.clean import clean_html
 
 from paperai.models import Models
 from paperai.query import Query
@@ -56,12 +58,11 @@ class Application:
 
             # Print each result, sorted by max score descending
             for uid in sorted(documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True):
-                cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference " + 
+                cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference " +
                             "FROM articles WHERE id = ?", [uid])
                 article = cur.fetchone()
 
-                matches = "\n".join([text for _, text in documents[uid]])
-                matches = matches.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;")
+                matches = "<br/>".join([text for _, text in documents[uid]])
 
                 title = "<a target='_blank' href='%s'>%s</a>" % (article[9], article[0])
 
@@ -94,7 +95,8 @@ class Application:
             st.markdown("<p class='small-font'>%d results</p>" % len(df), unsafe_allow_html=True)
 
             if not df.empty:
-                st.write(df[columns].to_html(escape=False, index=False), unsafe_allow_html=True)
+                html = df[columns].to_html(escape=False, index=False)
+                st.write(clean_html(html), unsafe_allow_html=True)
 
 @st.cache(allow_output_mutation=True)
 def create(path):
@@ -113,7 +115,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) <= 1 or not os.path.isdir(sys.argv[1]):
         st.error("Path to embeddings index not present or invalid")
-    else: 
+    else:
         st.set_page_config(layout="wide")
 
         # Create and run application
