@@ -127,6 +127,8 @@ class Highlights(object):
         n = len(set1.intersection(set2))
         return n / float(len(set1) + len(set2) - n) if n > 0 else 0
 
+class tokenizer():
+    
     @staticmethod
     def tokenize(text):
         """
