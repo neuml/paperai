@@ -122,6 +122,10 @@ class Annotate(Report):
             # Annotate file
             highlighter.highlight(match[0], output, highlights)
 
+class formatter:
+
+        #Used for annotaion that is readable
+
     def formatter(self, text):
         """
         Custom formatter that is passed to PDF Annotation method. This logic maps data cleansing logic in paperetl.
