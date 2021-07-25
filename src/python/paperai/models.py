@@ -76,6 +76,9 @@ class Models(object):
         # Append file name to path
         return os.path.join(path, name)
 
+class path:
+
+
     @staticmethod
     def load(path):
         """
