@@ -13,6 +13,7 @@ import regex as re
 # Defined at runtime
 from .index import Index
 from .models import Models
+from fpdf import FPDF
 
 class Export(object):
     """
@@ -20,9 +21,9 @@ class Export(object):
     """
 
     @staticmethod
-    def stream(dbfile, output):
+    def streamtext(dbfile, output):
         """
-        Iterates over each row in dbfile and writes text to output file
+        Iterates over each row in dbfile and writes text to output text file
 
         Args:
             dbfile: SQLite file to read
@@ -53,6 +54,49 @@ class Export(object):
             # Free database resources
             db.close()
 
+
+    @staticmethod
+    def streampdf(dbfile, output):
+        """
+        Iterates over each row in dbfile and writes text to output pdf file
+
+        Args:
+            dbfile: SQLite file to read
+            output: output file to store text
+        """
+
+
+        # Ready the pdf to be used as the output
+
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Times", size = 12)
+        
+        # Connection to database file
+        db = sqlite3.connect(dbfile)
+        cur = db.cursor()
+
+        # Get all indexed text, with a detected study design, excluding modeling designs
+        cur.execute(Index.SECTION_QUERY + " AND design NOT IN (0, 9)")
+
+        count = 0
+        for _, name, text in cur:
+            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
+                count += 1
+                if count % 1000 == 0:
+                    print("Streamed %d documents" % (count), end="\r")
+
+                # Write row
+                if text:
+                    pdf.cell(200, 5, txt = text, ln = 1, align = 'L')
+
+        print("Iterated over %d total rows" % (count))
+
+        pdf.output(output.name)
+
+        # Free database resources
+        db.close()
+
     @staticmethod
     def run(output, path):
         """
@@ -70,8 +114,11 @@ class Export(object):
         # Derive path to dbfile
         dbfile = os.path.join(path, "articles.sqlite")
 
-        # Stream text from database to file
-        Export.stream(dbfile, output)
+        if output.name.endswith(".pdf")
+            Export.streampdf(dbfile, output)
+        else
+            # Stream text from database to file
+            Export.streamtext(dbfile, output)
 
 if __name__ == "__main__":
     # Export data
