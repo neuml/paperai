@@ -17,7 +17,7 @@ class Annotate(Report):
     """
     Report writer for overlaying annotations on source PDFs. This format requires access to original PDFs.
     """
-
+    @abstractmethod
     def __init__(self, embeddings, db, qa, indir):
         """
         Creates a new report.
@@ -123,7 +123,15 @@ class Annotate(Report):
             # Annotate file
             highlighter.highlight(match[0], output, highlights)
 
-class formatter:
+class formatter(Annotate):
+
+    def __init__(self, text):
+        self.embeddings = embeddings
+        self.db = db
+
+    def add(self, text):
+        self.embeddings.append(db)
+        self.db += db.embeddings
 
         #Used for annotaion that is readable
 
@@ -139,6 +147,7 @@ class formatter:
         Returns:
             clean text
         """
+
 
         # List of patterns
         patterns = []
