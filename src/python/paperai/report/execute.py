@@ -8,10 +8,40 @@ from .annotate import Annotate
 from .csvr import CSV
 from .markdown import Markdown
 from .task import Task
+from abc import ABCMeta, abstractstaticmethod
 
 from ..models import Models
 
-class Execute(object):
+class IExecute(metaclass=ABCMeta):
+
+    @abstractstaticmethod
+    def create(render, embeddings, db, qa, indir):
+        pass
+
+    @abstractstaticmethod
+    def run(task, topn=None, render=None, path=None, qa=None, indir=None, threshold=None):
+        pass
+
+
+
+class Execute(IExecute):
+
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        if Execute.__instance == None:
+            Execute("expected", 0)
+        return __instance
+
+    def __init__(self, embeddings, render):
+        if Execute.__instance != None:
+            raise Exception("Cannot be instatiated more than once")
+        else:
+        self.embeddings = embeddings
+        self.render = render
+        Execute.__instance = self
+
     """
     Creates a Report
     """
