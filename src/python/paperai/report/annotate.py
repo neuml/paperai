@@ -12,6 +12,7 @@ from ..query import Query
 
 from .common import Report
 
+
 class Annotate(Report):
     """
     Report writer for overlaying annotations on source PDFs. This format requires access to original PDFs.
