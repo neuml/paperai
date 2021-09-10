@@ -6,7 +6,7 @@ import itertools
 
 import networkx
 
-from txtai.tokenizer import Tokenizer
+from txtai.pipeline import Tokenizer
 
 class Highlights(object):
     """

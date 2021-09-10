@@ -4,7 +4,7 @@ Report module
 
 import regex as re
 
-from txtai.extractor import Extractor
+from txtai.pipeline import Extractor
 
 from ..index import Index
 from ..query import Query

@@ -8,8 +8,8 @@ import sqlite3
 import sys
 import tempfile
 
+from txtai.pipeline import Tokenizer
 from txtai.vectors import WordVectors
-from txtai.tokenizer import Tokenizer
 
 from .models import Models
 

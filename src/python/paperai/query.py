@@ -9,7 +9,7 @@ import sys
 import html2markdown
 import mdv
 
-from txtai.tokenizer import Tokenizer
+from txtai.pipeline import Tokenizer
 
 from .highlights import Highlights
 from .models import Models

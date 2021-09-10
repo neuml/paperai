@@ -10,7 +10,7 @@ import regex as re
 import yaml
 
 from txtai.embeddings import Embeddings
-from txtai.tokenizer import Tokenizer
+from txtai.pipeline import Tokenizer
 
 from .models import Models
 
