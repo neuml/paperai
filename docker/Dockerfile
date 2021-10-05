@@ -9,11 +9,11 @@ ENV LANG=C.UTF-8
 
 # Install required packages
 RUN apt-get update && \
-    apt-get -y --no-install-recommends install libgomp1 gcc g++ python3.6 python3-dev python3-pip wget && \
+    apt-get -y --no-install-recommends install libgomp1 gcc g++ python3.7 python3.7-dev python3-pip wget && \
     rm -rf /var/lib/apt/lists
 
 # Install paperai project and dependencies
-RUN ln -sf /usr/bin/python3.6 /usr/bin/python && \
+RUN ln -sf /usr/bin/python3.7 /usr/bin/python && \
     python -m pip install --no-cache-dir -U pip wheel setuptools && \
     python -m pip install --no-cache-dir paperai
 
