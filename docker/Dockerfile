@@ -15,8 +15,7 @@ RUN apt-get update && \
 # Install paperai project and dependencies
 RUN ln -sf /usr/bin/python3.6 /usr/bin/python && \
     python -m pip install --no-cache-dir -U pip wheel setuptools && \
-    python -m pip install --no-cache-dir paperai && \
-    python -c "import nltk; nltk.download('punkt')"
+    python -m pip install --no-cache-dir paperai
 
 # Cleanup build packages
 RUN apt-get -y purge gcc g++ python3-dev && apt-get -y autoremove
