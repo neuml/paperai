@@ -15,8 +15,8 @@ class CSV(Report):
     Report writer for CSV exports. Format is designed to be imported into other tools.
     """
 
-    def __init__(self, embeddings, db, qa):
-        super(CSV, self).__init__(embeddings, db, qa)
+    def __init__(self, embeddings, db, options):
+        super().__init__(embeddings, db, options)
 
         # CSV writer handle
         self.csvout = None

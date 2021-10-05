@@ -4,7 +4,7 @@ Report module
 
 import regex as re
 
-from txtai.pipeline import Extractor
+from txtai.pipeline import Extractor, Similarity
 
 from ..index import Index
 from ..query import Query
@@ -14,39 +14,45 @@ class Report(object):
     Methods to build reports from a series of queries
     """
 
-    def __init__(self, embeddings, db, qa):
+    def __init__(self, embeddings, db, options):
         """
         Creates a new report.
 
         Args:
             embeddings: embeddings index
             db: database connection
-            qa: qa model path
+            options: report options
         """
 
         # Store references to embeddings index and open database cursor
         self.embeddings = embeddings
         self.cur = db.cursor()
 
+        # Report options
+        self.options = options
+
         # Column names
         self.names = []
 
         # Extractive question-answering model
-        self.extractor = Extractor(self.embeddings, qa if qa else "NeuML/bert-small-cord19qa")
+        # Determine if embeddings or a custom similarity model should be used to build question context
+        self.extractor = Extractor(Similarity(options["similarity"]) if "similarity" in options else self.embeddings,
+                                   options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
+                                   minscore=options.get("minscore"),
+                                   mintokens=options.get("mintokens"))
 
-    def build(self, queries, topn, threshold, output):
+    def build(self, queries, options, output):
         """
         Builds a report using a list of input queries
 
         Args:
             queries: queries to execute
-            topn: number of documents to return
-            threshold: query match score threshold
+            options: report options
             output: output I/O object
         """
 
         # Default to 50 documents if not specified
-        topn = topn if topn else 50
+        topn = options.get("topn", 50)
 
         for name, config in queries:
             query = config["query"]
@@ -59,7 +65,7 @@ class Report(object):
             self.separator(output)
 
             # Query for best matches
-            results = Query.search(self.embeddings, self.cur, query, topn, threshold)
+            results = Query.search(self.embeddings, self.cur, query, topn, options.get("threshold"))
 
             # Generate highlights section
             self.section(output, "Highlights")
@@ -176,13 +182,17 @@ class Report(object):
         # Only execute embeddings queries for columns with matches set
         for name, query, matches in queries:
             # Run query
-            topn = self.extractor.query([query], texts)[0]
+            topn = self.extractor.query([query], texts)
+            if topn:
+                topn = topn[0]
 
-            # Get topn text matches
-            topn = [text for _, text, _ in topn][:matches]
+                # Get topn text matches
+                topn = [text for _, text, _ in topn][:matches]
 
-            # Join results into String and return
-            fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
+                # Join results into String and return
+                fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
+            else:
+                fields[name] = None
 
         # Add extraction fields
         for name, value in self.extractor(questions, texts):
@@ -272,7 +282,7 @@ class Report(object):
         # Get list of document text sections
         sections = []
         for sid, name, text in self.cur.fetchall():
-            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
+            if not name or not re.search(Index.SECTION_FILTER, name.lower()) or self.options.get("allsections"):
                 sections.append((sid, text))
 
         return sections

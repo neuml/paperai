@@ -17,24 +17,23 @@ class Annotate(Report):
     Report writer for overlaying annotations on source PDFs. This format requires access to original PDFs.
     """
 
-    def __init__(self, embeddings, db, qa, indir):
+    def __init__(self, embeddings, db, options):
         """
         Creates a new report.
 
         Args:
             embeddings: embeddings index
             db: database connection
-            qa: qa model path
-            indir: path to input directory containing source files
+            options: report options
         """
 
-        super(Annotate, self).__init__(embeddings, db, qa)
+        super().__init__(embeddings, db, options)
 
         # List of all source files
         self.files = []
 
         # Recursively walk directory and store file paths
-        for root, _, files in sorted(os.walk(indir)):
+        for root, _, files in sorted(os.walk(options["indir"])):
             for f in sorted(files):
                 self.files.append(os.path.join(root, f))
 

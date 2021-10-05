@@ -39,7 +39,7 @@ class Task(object):
         # Extract queries
         queries = Task.queries(config)
 
-        return config["name"], queries, outdir
+        return config["name"], config.get("options", {}), queries, outdir
 
     @staticmethod
     def queries(config):
@@ -56,7 +56,7 @@ class Task(object):
         queries = []
 
         for key, value in config.items():
-            if key not in ["id", "name", "fields"]:
+            if key not in ["id", "name", "options", "fields"]:
                 # Flatten columns
                 value["columns"] = Task.flatten(value["columns"])
 

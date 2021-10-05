@@ -17,7 +17,7 @@ class Execute(object):
     """
 
     @staticmethod
-    def create(render, embeddings, db, qa, indir):
+    def create(render, embeddings, db, options):
         """
         Factory method to construct a Report.
 
@@ -25,19 +25,18 @@ class Execute(object):
             render: report rendering format
             embeddings: embeddings index
             db: database connection
-            qa: qa model path
-            indir: path to input directory containing source files
+            options: report options
 
         Returns:
             Report
         """
 
         if render == "ant":
-            return Annotate(embeddings, db, qa, indir)
+            return Annotate(embeddings, db, options)
         elif render == "csv":
-            return CSV(embeddings, db, qa)
+            return CSV(embeddings, db, options)
         elif render == "md":
-            return Markdown(embeddings, db, qa)
+            return Markdown(embeddings, db, options)
 
         return None
 
@@ -60,13 +59,16 @@ class Execute(object):
         embeddings, db = Models.load(path)
 
         # Read task configuration
-        name, queries, outdir = Task.load(task)
+        name, options, queries, outdir = Task.load(task)
+
+        # Override report options with any command line options
+        options = Execute.options(options, topn, render, path, qa, indir, threshold)
 
         # Derive report format
-        render = render if render else "md"
+        render = options["render"] if options["render"] else "md"
 
         # Create report object. Default to Markdown.
-        report = Execute.create(render, embeddings, db, qa, indir)
+        report = Execute.create(render, embeddings, db, options)
 
         # Generate output filename
         outfile = os.path.join(outdir, "%s.%s" % (name, render))
@@ -74,10 +76,37 @@ class Execute(object):
         # Stream report to file
         with open(outfile, "w") as output:
             # Build the report
-            report.build(queries, topn, threshold, output)
+            report.build(queries, options, output)
 
         # Free any resources
         report.cleanup(outfile)
 
         # Free resources
         Models.close(db)
+
+    @staticmethod
+    def options(options, topn, render, path, qa, indir, threshold):
+        """
+        Combine report and command line options with command line options taking precedence.
+
+        Args:
+            options: report options
+            topn: number of results
+            render: report rendering format ("md" for markdown, "csv" for csv, "ant" for pdf annotation)
+            path: embeddings model path
+            qa: qa model path
+            indir: path to input directory containing source files
+            threshold: query match score threshold
+
+        Returns:
+            combined options
+        """
+
+        options["topn"] = topn if topn is not None else options.get("topn")
+        options["render"] = render if render else options.get("render")
+        options["path"] = path if path else options.get("path")
+        options["qa"] = qa if qa else options.get("qa")
+        options["indir"] = indir if indir else options.get("indir")
+        options["threshold"] = threshold if threshold is not None else options.get("threshold")
+
+        return options
