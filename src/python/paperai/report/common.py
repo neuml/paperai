@@ -37,9 +37,15 @@ class Report(object):
         # Extractive question-answering model
         # Determine if embeddings or a custom similarity model should be used to build question context
         self.extractor = Extractor(Similarity(options["similarity"]) if "similarity" in options else self.embeddings,
-                                   options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
-                                   minscore=options.get("minscore"),
-                                   mintokens=options.get("mintokens"))
+                                   options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa")
+
+        minscore = options.get("minscore")
+        if minscore is not None:
+            self.extractor.minscore = minscore
+
+        mintokens = options.get("mintokens")
+        if mintokens is not None:
+            self.extractor.mintokens = mintokens
 
     def build(self, queries, options, output):
         """
