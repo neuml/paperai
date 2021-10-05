@@ -216,7 +216,7 @@ class Query(object):
             list of all ids as a dict
         """
 
-        cur.execute("SELECT Id FROM articles LIMIT 500")
+        cur.execute("SELECT Id FROM articles")
         return {row[0]: None for row in cur.fetchall()}
 
     @staticmethod
