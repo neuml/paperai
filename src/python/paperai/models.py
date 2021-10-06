@@ -99,8 +99,7 @@ class Models(object):
             embeddings = Embeddings()
             embeddings.load(path)
         else:
-            print("ERROR: loading model: ensure model is present")
-            raise FileNotFoundError("Unable to load model from %s" % path)
+            embeddings = None
 
         # Connect to database file
         db = sqlite3.connect(dbfile)
