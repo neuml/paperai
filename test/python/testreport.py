@@ -25,7 +25,7 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report1.yml", 10, "csv", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report1.yml", 10, "md", Utils.PATH, None)
 
-        hashes = [("Age.csv", "a840643fa1dd0fa43e00091a44880fb9"),
+        hashes = [("Age.csv", "ed2b9c761dc949708cd6254e6207ff83"),
                   ("Heart Disease.csv", "90f2dede871c545dd1492aef8ed84645"),
                   ("Heart Failure.csv", "2152a8187ff53e9c4224e3c9891b5b33"),
                   ("Report1.md", "a5a88e07280719d99fa8a9bda087cfe7")]
