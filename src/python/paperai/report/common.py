@@ -185,15 +185,14 @@ class Report(object):
             else:
                 questions.append((name, query, question, snippet))
 
-        # Only execute embeddings queries for columns with matches set
-        for name, query, matches in queries:
-            # Run query
-            topn = self.extractor.query([query], texts)
-            if topn:
-                topn = topn[0]
+        # Run all extractor queries against document text
+        results = self.extractor.query([query for _, query, _ in queries], texts)
 
+        # Only execute embeddings queries for columns with matches set
+        for x, (name, query, matches) in enumerate(queries):
+            if results[x]:
                 # Get topn text matches
-                topn = [text for _, text, _ in topn][:matches]
+                topn = [text for _, text, _ in results[x]][:matches]
 
                 # Join results into String and return
                 fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
