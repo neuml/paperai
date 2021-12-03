@@ -4,7 +4,7 @@ Report module
 
 import regex as re
 
-from txtai.pipeline import Extractor, Labels, Similarity
+from txtai.pipeline import Extractor, Labels, Similarity, Tokenizer
 
 from ..index import Index
 from ..query import Query
@@ -350,7 +350,9 @@ class Report:
                 or not re.search(Index.SECTION_FILTER, name.lower())
                 or self.options.get("allsections")
             ):
-                sections.append((sid, text))
+                # Check that section has at least 1 token
+                if Tokenizer.tokenize(text):
+                    sections.append((sid, text))
 
         return sections
 
