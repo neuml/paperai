@@ -4,8 +4,8 @@ Models module tests
 
 import unittest
 
-# pylint: disable=E0401
 from paperai.models import Models
+
 
 class TestModels(unittest.TestCase):
     """
@@ -32,4 +32,3 @@ class TestModels(unittest.TestCase):
         """
 
         self.assertTrue(Models.vectorPath("test").endswith("test"))
- 

@@ -6,10 +6,11 @@ import contextlib
 import io
 import unittest
 
-# pylint: disable=E0401
 from paperai.shell import Shell
 
+# pylint: disable=C0411
 from utils import Utils
+
 
 class TestShell(unittest.TestCase):
     """

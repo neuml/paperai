@@ -8,16 +8,57 @@ import networkx
 
 from txtai.pipeline import Tokenizer
 
+
 class Highlights:
     """
     Methods to extract highlights from a list of text sections.
     """
 
     # Domain specific stop list
-    STOP_WORDS = {"abstract", "al", "article", "arxiv", "author", "biorxiv", "copyright", "da", "dei", "del", "dell", "della",
-                  "delle", "di", "doi", "et", "fig", "figure", "funder", "holder", "http", "https", "il", "la", "le",
-                  "license", "medrxiv", "non", "org", "peer", "peer-reviewed", "permission", "preprint", "publication",
-                  "pubmed", "reserved", "reviewed", "rights", "si", "una", "used", "using"}
+    STOP_WORDS = {
+        "abstract",
+        "al",
+        "article",
+        "arxiv",
+        "author",
+        "biorxiv",
+        "copyright",
+        "da",
+        "dei",
+        "del",
+        "dell",
+        "della",
+        "delle",
+        "di",
+        "doi",
+        "et",
+        "fig",
+        "figure",
+        "funder",
+        "holder",
+        "http",
+        "https",
+        "il",
+        "la",
+        "le",
+        "license",
+        "medrxiv",
+        "non",
+        "org",
+        "peer",
+        "peer-reviewed",
+        "permission",
+        "preprint",
+        "publication",
+        "pubmed",
+        "reserved",
+        "reviewed",
+        "rights",
+        "si",
+        "una",
+        "used",
+        "using",
+    }
 
     @staticmethod
     def build(sections, topn):
@@ -44,7 +85,7 @@ class Highlights:
 
             # Compare text to existing results, look for highly unique results
             # This finds results that are important but not repetitive
-            unique = all([Highlights.jaccardIndex(t, tokens) <= 0.2 for _, t in results])
+            unique = all(Highlights.jaccardIndex(t, tokens) <= 0.2 for _, t in results)
             if unique:
                 results.append((uid, tokens))
 
@@ -107,7 +148,9 @@ class Highlights:
             node2, tokens2 = pair[1]
 
             # Add a graph edge and compute the cosine similarity for the weight
-            graph.add_edge(node1, node2, weight=Highlights.jaccardIndex(tokens1, tokens2))
+            graph.add_edge(
+                node1, node2, weight=Highlights.jaccardIndex(tokens1, tokens2)
+            )
 
         return graph
 
@@ -140,4 +183,8 @@ class Highlights:
         """
 
         # Remove additional stop words to improve highlighting results
-        return {token for token in Tokenizer.tokenize(text) if token not in Highlights.STOP_WORDS}
+        return {
+            token
+            for token in Tokenizer.tokenize(text)
+            if token not in Highlights.STOP_WORDS
+        }

@@ -13,6 +13,7 @@ from txtai.vectors import WordVectors
 
 from .models import Models
 
+
 class RowIterator:
     """
     Iterates over rows in a database query. Allows for multiple iterations.
@@ -54,8 +55,8 @@ class RowIterator:
         result = next(self.rows)
         if result is None:
             raise StopIteration
-        else:
-            return result
+
+        return result
 
     def stream(self, dbfile):
         """
@@ -89,6 +90,7 @@ class RowIterator:
         # Free database resources
         db.close()
 
+
 class Vectors:
     """
     Methods to build a FastText model.
@@ -109,7 +111,9 @@ class Vectors:
         tokens = None
 
         # Stream tokens to temp working file
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as output:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".txt", delete=False
+        ) as output:
             # Save file path
             tokens = output.name
 
@@ -150,7 +154,12 @@ class Vectors:
         # Remove temporary tokens file
         os.remove(tokens)
 
+
 if __name__ == "__main__":
     # Create vector model
-    Vectors.run(sys.argv[1] if len(sys.argv) > 1 else None, 300, 4,
-                sys.argv[2] if len(sys.argv) > 2 else None)
+    Vectors.run(
+        sys.argv[1] if len(sys.argv) > 1 else None,
+        300,
+        4,
+        sys.argv[2] if len(sys.argv) > 2 else None,
+    )

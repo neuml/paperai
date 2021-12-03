@@ -4,7 +4,8 @@ Utils module
 
 import hashlib
 
-class Utils(object):
+
+class Utils:
     """
     Utility constants and methods
     """

@@ -9,13 +9,14 @@ from cmd import Cmd
 from .models import Models
 from .query import Query
 
+
 class Shell(Cmd):
     """
     paperai query shell.
     """
 
     def __init__(self, path):
-        super(Shell, self).__init__()
+        super().__init__()
 
         self.intro = "paperai query shell"
         self.prompt = "(paperai) "
@@ -34,6 +35,7 @@ class Shell(Cmd):
     def default(self, line):
         Query.query(self.embeddings, self.db, line, None, None)
 
+
 def main(path=None):
     """
     Shell execution loop.
@@ -43,6 +45,7 @@ def main(path=None):
     """
 
     Shell(path).cmdloop()
+
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else None)

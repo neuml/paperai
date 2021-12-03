@@ -8,6 +8,7 @@ import sqlite3
 
 from txtai.embeddings import Embeddings
 
+
 class Models:
     """
     Common methods for generating data paths.

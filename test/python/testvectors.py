@@ -5,10 +5,11 @@ Vectors module tests
 import os
 import unittest
 
-# pylint: disable=E0401
 from paperai.vectors import RowIterator, Vectors
 
+# pylint: disable=C0411
 from utils import Utils
+
 
 class TestVectors(unittest.TestCase):
     """

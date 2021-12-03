@@ -14,6 +14,7 @@ import regex as re
 from .index import Index
 from .models import Models
 
+
 class Export:
     """
     Exports database rows into a text file line-by-line.
@@ -29,7 +30,7 @@ class Export:
             output: output file to store text
         """
 
-        with open(output, "w", encoding="utf-8") as output:
+        with open(output, "w", encoding="utf-8") as out:
             # Connection to database file
             db = sqlite3.connect(dbfile)
             cur = db.cursor()
@@ -46,7 +47,7 @@ class Export:
 
                     # Write row
                     if text:
-                        output.write(text + "\n")
+                        out.write(text + "\n")
 
             print(f"Iterated over {count} total rows")
 
@@ -72,6 +73,7 @@ class Export:
 
         # Stream text from database to file
         Export.stream(dbfile, output)
+
 
 if __name__ == "__main__":
     # Export data

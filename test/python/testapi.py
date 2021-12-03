@@ -13,9 +13,9 @@ from fastapi.testclient import TestClient
 
 from txtai.api import app, start
 
-# pylint: disable=E0401
 from paperai.index import Index
 
+# pylint: disable=C0411
 from utils import Utils
 
 # Configuration for a paperai index
@@ -24,13 +24,20 @@ embeddings:
 path: %s
 """
 
+
 class TestAPI(unittest.TestCase):
     """
     API tests
     """
 
     @staticmethod
-    @patch.dict(os.environ, {"CONFIG": os.path.join(tempfile.gettempdir(), "testapi.yml"), "API_CLASS": "paperai.api.API"})
+    @patch.dict(
+        os.environ,
+        {
+            "CONFIG": os.path.join(tempfile.gettempdir(), "testapi.yml"),
+            "API_CLASS": "paperai.api.API",
+        },
+    )
     def start():
         """
         Starts a mock FastAPI client.
@@ -59,7 +66,7 @@ class TestAPI(unittest.TestCase):
 
         # Run search
         params = urllib.parse.urlencode({"query": "+hypertension ci", "limit": 1})
-        results= client.get(f"search?{params}").json()
+        results = client.get(f"search?{params}").json()
 
         # Check number of results
         self.assertEqual(len(results), 1)

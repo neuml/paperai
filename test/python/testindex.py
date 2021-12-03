@@ -4,10 +4,11 @@ Index module tests
 
 import unittest
 
-# pylint: disable=E0401
 from paperai.index import Index
 
+# pylint: disable=C0411
 from utils import Utils
+
 
 class TestIndex(unittest.TestCase):
     """

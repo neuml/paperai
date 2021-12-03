@@ -6,6 +6,7 @@ import unittest
 
 from paperai.report.column import Column
 
+
 class TestColumn(unittest.TestCase):
     """
     Column tests
@@ -40,8 +41,12 @@ class TestColumn(unittest.TestCase):
 
         self.assertEqual(Column.duration("2021-01-01 to 2021-01-31", "days"), 30)
         self.assertEqual(Column.duration("2021-01-01 to 2021-01-31", "months"), 1)
-        self.assertEqual(round(Column.duration("2021-01-01 to 2021-01-31", "weeks"), 2), 4.29)
-        self.assertEqual(round(Column.duration("2021-01-01 to 2021-01-31", "years"), 2), 0.08)
+        self.assertEqual(
+            round(Column.duration("2021-01-01 to 2021-01-31", "weeks"), 2), 4.29
+        )
+        self.assertEqual(
+            round(Column.duration("2021-01-01 to 2021-01-31", "years"), 2), 0.08
+        )
 
     def testDurationStartEndNoYear(self):
         """
@@ -67,7 +72,7 @@ class TestColumn(unittest.TestCase):
 
         self.assertEqual(Column.duration("1 year", "days"), 365)
         self.assertEqual(Column.duration("1 year", "weeks"), 52)
-        self.assertEqual(Column.duration("1 year", "months"), 12) 
+        self.assertEqual(Column.duration("1 year", "months"), 12)
 
         self.assertEqual(Column.duration("30 moons", "days"), None)
         self.assertEqual(Column.convert("30", "moons", "days"), "30")

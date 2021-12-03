@@ -11,6 +11,7 @@ from ..query import Query
 
 from .column import Column
 
+
 class Report:
     """
     Methods to build reports from a series of queries
@@ -36,16 +37,20 @@ class Report:
         # Column names
         self.names = []
 
-        self.similarity = Similarity(options["similarity"]) if "similarity" in options else None
+        self.similarity = (
+            Similarity(options["similarity"]) if "similarity" in options else None
+        )
         self.labels = Labels(model=self.similarity) if self.similarity else None
 
         # Extractive question-answering model
         # Determine if embeddings or a custom similarity model should be used to build question context
-        self.extractor = Extractor(self.similarity if self.similarity else self.embeddings,
-                                   options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
-                                   minscore=options.get("minscore"),
-                                   mintokens=options.get("mintokens"),
-                                   context=options.get("context"))
+        self.extractor = Extractor(
+            self.similarity if self.similarity else self.embeddings,
+            options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
+            minscore=options.get("minscore"),
+            mintokens=options.get("mintokens"),
+            context=options.get("context"),
+        )
 
     def build(self, queries, options, output):
         """
@@ -71,7 +76,9 @@ class Report:
             self.separator(output)
 
             # Query for best matches
-            results = Query.search(self.embeddings, self.cur, query, topn, options.get("threshold"))
+            results = Query.search(
+                self.embeddings, self.cur, query, topn, options.get("threshold")
+            )
 
             # Generate highlights section
             self.section(output, "Highlights")
@@ -108,7 +115,9 @@ class Report:
         for highlight in Query.highlights(results, topn):
             # Get matching article
             uid = [article for _, _, article, text in results if text == highlight][0]
-            self.cur.execute("SELECT Authors, Reference FROM articles WHERE id = ?", [uid])
+            self.cur.execute(
+                "SELECT Authors, Reference FROM articles WHERE id = ?", [uid]
+            )
             article = self.cur.fetchone()
 
             # Write out highlight row
@@ -129,14 +138,19 @@ class Report:
         _, query, _ = metadata
 
         # Retrieve list of documents
-        documents = Query.all(self.cur) if query == "*" else Query.documents(results, topn)
+        documents = (
+            Query.all(self.cur) if query == "*" else Query.documents(results, topn)
+        )
 
         # Collect matching rows
         rows = []
 
         for x, uid in enumerate(documents):
             # Get article metadata
-            self.cur.execute("SELECT Published, Title, Reference, Publication, Source, Entry, Id FROM articles WHERE id = ?", [uid])
+            self.cur.execute(
+                "SELECT Published, Title, Reference, Publication, Source, Entry, Id FROM articles WHERE id = ?",
+                [uid],
+            )
             article = self.cur.fetchone()
 
             if x and x % 100 == 0:
@@ -178,7 +192,7 @@ class Report:
         #  1. Similarity query
         #  2. Extractor query (similarity + question)
         #  3. Question-answering on other field
-        queries, extractions, questions  = [], [], []
+        queries, extractions, questions = [], [], []
 
         # Retrieve indexed document text for article
         sections = self.sections(uid)
@@ -202,7 +216,9 @@ class Report:
                 topn = [text for _, text, _ in results[x]][:matches]
 
                 # Join results into String and return
-                value = [self.resolve(params, sections, uid, name, value) for value in topn]
+                value = [
+                    self.resolve(params, sections, uid, name, value) for value in topn
+                ]
                 fields[name] = "\n\n".join(value) if value else None
             else:
                 fields[name] = None
@@ -210,7 +226,9 @@ class Report:
         # Add extraction fields
         for name, value in self.extractor(extractions, texts):
             # Resolves the full value based on column parameters
-            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
+            fields[name] = (
+                self.resolve(params, sections, uid, name, value) if value else ""
+            )
 
         # Add question fields
         names, qa, contexts, snippets = [], [], [], []
@@ -220,9 +238,13 @@ class Report:
             contexts.append(fields[query])
             snippets.append(snippet)
 
-        for name, value in self.extractor.answers(names, qa, contexts, contexts, snippets):
+        for name, value in self.extractor.answers(
+            names, qa, contexts, contexts, snippets
+        ):
             # Resolves the full value based on column parameters
-            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
+            fields[name] = (
+                self.resolve(params, sections, uid, name, value) if value else ""
+            )
 
         return fields
 
@@ -254,7 +276,11 @@ class Report:
             elif "query" in column:
                 # Query variable substitutions
                 query = self.variables(column["query"], metadata)
-                question = self.variables(column["question"], metadata) if "question" in column else query
+                question = (
+                    self.variables(column["question"], metadata)
+                    if "question" in column
+                    else query
+                )
 
                 # Additional context parameters
                 section = column.get("section", False)
@@ -264,7 +290,18 @@ class Report:
                 snippet = column.get("snippet", False)
                 snippet = True if section or surround else snippet
 
-                params.append((column["name"], query, question, snippet, section, surround, matches, dtype))
+                params.append(
+                    (
+                        column["name"],
+                        query,
+                        question,
+                        snippet,
+                        section,
+                        surround,
+                        matches,
+                        dtype,
+                    )
+                )
 
         return fields, params
 
@@ -308,7 +345,11 @@ class Report:
         # Get list of document text sections
         sections = []
         for sid, name, text in self.cur.fetchall():
-            if not name or not re.search(Index.SECTION_FILTER, name.lower()) or self.options.get("allsections"):
+            if (
+                not name
+                or not re.search(Index.SECTION_FILTER, name.lower())
+                or self.options.get("allsections")
+            ):
                 sections.append((sid, text))
 
         return sections
@@ -371,7 +412,10 @@ class Report:
             full text for matching section
         """
 
-        self.cur.execute("SELECT Text FROM sections WHERE article = ? AND name = (SELECT name FROM sections WHERE id = ?)", [uid, sid])
+        self.cur.execute(
+            "SELECT Text FROM sections WHERE article = ? AND name = (SELECT name FROM sections WHERE id = ?)",
+            [uid, sid],
+        )
         return " ".join([x[0] for x in self.cur.fetchall()])
 
     def surround(self, uid, sid, size):
@@ -387,8 +431,11 @@ class Report:
             matching text with surrounding context
         """
 
-        self.cur.execute("SELECT Text FROM sections WHERE article = ? AND id in (SELECT id FROM sections WHERE id >= ? AND id <= ?) AND " + \
-                         "name = (SELECT name FROM sections WHERE id = ?)", [uid, sid - size, sid + size, sid])
+        self.cur.execute(
+            "SELECT Text FROM sections WHERE article = ? AND id in (SELECT id FROM sections WHERE id >= ? AND id <= ?) AND "
+            + "name = (SELECT name FROM sections WHERE id = ?)",
+            [uid, sid - size, sid + size, sid],
+        )
 
         return " ".join([x[0] for x in self.cur.fetchall()])
 

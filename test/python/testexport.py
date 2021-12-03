@@ -4,10 +4,11 @@ Export module tests
 
 import unittest
 
-# pylint: disable=E0401
 from paperai.export import Export
 
+# pylint: disable=C0411
 from utils import Utils
+
 
 class TestExport(unittest.TestCase):
     """
@@ -20,4 +21,7 @@ class TestExport(unittest.TestCase):
         """
 
         Export.run(Utils.PATH + "/export.txt", Utils.PATH)
-        self.assertEqual(Utils.hashfile(Utils.PATH + "/export.txt"), "ac15a3ece486c3035ef861f6706c3e1b")
+        self.assertEqual(
+            Utils.hashfile(Utils.PATH + "/export.txt"),
+            "ac15a3ece486c3035ef861f6706c3e1b",
+        )

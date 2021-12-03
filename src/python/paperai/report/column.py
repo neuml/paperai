@@ -7,6 +7,7 @@ import regex as re
 from dateutil.parser import parse
 from text2digits.text2digits import Text2Digits
 
+
 class Column:
     """
     Column formatting functions for reports.
@@ -102,8 +103,10 @@ class Column:
         if len(data) > 1 and not data[1].endswith("s"):
             data[1] = data[1] + "s"
 
-        if len(data) == 2 and \
-           (data[0].replace(".", "", 1).isnumeric() and data[1] in (["days", "weeks", "months", "years"])):
+        if len(data) == 2 and (
+            data[0].replace(".", "", 1).isnumeric()
+            and data[1] in (["days", "weeks", "months", "years"])
+        ):
 
             value, suffix = sorted(data)
             value = float(value)
@@ -112,6 +115,7 @@ class Column:
 
         return None
 
+    # pylint: disable=R0911,R0912
     @staticmethod
     def convert(value, itype, otype):
         """

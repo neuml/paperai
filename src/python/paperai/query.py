@@ -14,6 +14,7 @@ from txtai.pipeline import Tokenizer
 from .highlights import Highlights
 from .models import Models
 
+
 class Query:
     """
     Methods to query an embeddings index.
@@ -93,7 +94,9 @@ class Query:
             text = Query.markdown(text)
             text = Query.escape(text)
 
-        text = mdv.main(text, theme=theme, c_theme="953.3567", cols=180, tab_length=tab_length)
+        text = mdv.main(
+            text, theme=theme, c_theme="953.3567", cols=180, tab_length=tab_length
+        )
 
         if html:
             text = Query.unescape(text)
@@ -126,8 +129,16 @@ class Query:
         results = []
 
         # Get list of required and prohibited tokens
-        must = [token.strip("+") for token in query.split() if token.startswith("+") and len(token) > 1]
-        mnot = [token.strip("-") for token in query.split() if token.startswith("-") and len(token) > 1]
+        must = [
+            token.strip("+")
+            for token in query.split()
+            if token.startswith("+") and len(token) > 1
+        ]
+        mnot = [
+            token.strip("-")
+            for token in query.split()
+            if token.startswith("-") and len(token) > 1
+        ]
 
         # Tokenize search query
         query = Tokenizer.tokenize(query)
@@ -143,8 +154,10 @@ class Query:
                 # Add result if:
                 #   - all required tokens are present or there are not required tokens AND
                 #   - all prohibited tokens are not present or there are not prohibited tokens
-                if (not must or all([token.lower() in text.lower() for token in must])) and (
-                    not mnot or all([token.lower() not in text.lower() for token in mnot])
+                if (
+                    not must or all(token.lower() in text.lower() for token in must)
+                ) and (
+                    not mnot or all(token.lower() not in text.lower() for token in mnot)
                 ):
                     # Save result
                     results.append((uid, score, sid, text))
@@ -201,7 +214,9 @@ class Query:
             documents[uid] = sorted(list(documents[uid]), reverse=True)
 
         # Get documents with top n best sections
-        topn = sorted(documents, key=lambda k: max([x[0] for x in documents[k]]), reverse=True)[:topn]
+        topn = sorted(
+            documents, key=lambda k: max([x[0] for x in documents[k]]), reverse=True
+        )[:topn]
         return {uid: documents[uid] for uid in topn}
 
     @staticmethod
@@ -325,8 +340,13 @@ class Query:
         print(Query.render("# Articles") + "\n")
 
         # Print each result, sorted by max score descending
-        for uid in sorted(documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True):
-            cur.execute("SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?", [uid])
+        for uid in sorted(
+            documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True
+        ):
+            cur.execute(
+                "SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?",
+                [uid],
+            )
             article = cur.fetchone()
 
             print(f"Title: {article[0]}")
@@ -338,7 +358,9 @@ class Query:
 
             # Print top matches
             for score, text in documents[uid]:
-                print(Query.render(f"## - ({score:.4f}): {Query.text(text)}", html=False))
+                print(
+                    Query.render(f"## - ({score:.4f}): {Query.text(text)}", html=False)
+                )
 
             print()
 
@@ -363,9 +385,12 @@ class Query:
         # Free resources
         Models.close(db)
 
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        Query.run(sys.argv[1],
-                  int(sys.argv[2]) if len(sys.argv) > 2 else None,
-                  sys.argv[3] if len(sys.argv) > 3 else None,
-                  float(sys.argv[4]) if len(sys.argv) > 4 else None)
+        Query.run(
+            sys.argv[1],
+            int(sys.argv[2]) if len(sys.argv) > 2 else None,
+            sys.argv[3] if len(sys.argv) > 3 else None,
+            float(sys.argv[4]) if len(sys.argv) > 4 else None,
+        )

@@ -11,6 +11,7 @@ from .task import Task
 
 from ..models import Models
 
+
 class Execute:
     """
     Creates a Report
@@ -33,15 +34,17 @@ class Execute:
 
         if render == "ant":
             return Annotate(embeddings, db, options)
-        elif render == "csv":
+        if render == "csv":
             return CSV(embeddings, db, options)
-        elif render == "md":
+        if render == "md":
             return Markdown(embeddings, db, options)
 
         return None
 
     @staticmethod
-    def run(task, topn=None, render=None, path=None, qa=None, indir=None, threshold=None):
+    def run(
+        task, topn=None, render=None, path=None, qa=None, indir=None, threshold=None
+    ):
         """
         Reads a list of queries from a task file and builds a report.
 
@@ -107,6 +110,8 @@ class Execute:
         options["path"] = path if path else options.get("path")
         options["qa"] = qa if qa else options.get("qa")
         options["indir"] = indir if indir else options.get("indir")
-        options["threshold"] = threshold if threshold is not None else options.get("threshold")
+        options["threshold"] = (
+            threshold if threshold is not None else options.get("threshold")
+        )
 
         return options

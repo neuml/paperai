@@ -6,6 +6,7 @@ import os
 
 import yaml
 
+
 class Task:
     """
     YAML task configuration loader

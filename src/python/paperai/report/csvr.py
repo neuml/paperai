@@ -10,6 +10,7 @@ from ..query import Query
 
 from .common import Report
 
+
 class CSV(Report):
     """
     Report writer for CSV exports. Format is designed to be imported into other tools.
@@ -31,8 +32,17 @@ class CSV(Report):
         if self.csvout:
             self.csvout.close()
 
-        self.csvout = open(os.path.join(os.path.dirname(output.name), f"{task}.csv"), "w", newline="", encoding="utf-8")
-        self.writer = csv.writer(self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        # pylint: disable=R1732
+        self.csvout = open(
+            os.path.join(os.path.dirname(output.name), f"{task}.csv"),
+            "w",
+            newline="",
+            encoding="utf-8",
+        )
+
+        self.writer = csv.writer(
+            self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+        )
 
     def write(self, row):
         """
@@ -70,7 +80,9 @@ class CSV(Report):
         row["Source"] = article[4]
 
         # Top Matches
-        row["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
+        row["Matches"] = (
+            "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
+        )
 
         # Entry Date
         row["Entry"] = article[5] if article[5] else ""
