@@ -4,12 +4,14 @@ Report module
 
 import regex as re
 
-from txtai.pipeline import Extractor, Similarity
+from txtai.pipeline import Extractor, Labels, Similarity
 
 from ..index import Index
 from ..query import Query
 
-class Report(object):
+from .column import Column
+
+class Report:
     """
     Methods to build reports from a series of queries
     """
@@ -34,12 +36,16 @@ class Report(object):
         # Column names
         self.names = []
 
+        self.similarity = Similarity(options["similarity"]) if "similarity" in options else None
+        self.labels = Labels(model=self.similarity) if self.similarity else None
+
         # Extractive question-answering model
         # Determine if embeddings or a custom similarity model should be used to build question context
-        self.extractor = Extractor(Similarity(options["similarity"]) if "similarity" in options else self.embeddings,
+        self.extractor = Extractor(self.similarity if self.similarity else self.embeddings,
                                    options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
                                    minscore=options.get("minscore"),
-                                   mintokens=options.get("mintokens"))
+                                   mintokens=options.get("mintokens"),
+                                   context=options.get("context"))
 
     def build(self, queries, options, output):
         """
@@ -128,11 +134,13 @@ class Report(object):
         # Collect matching rows
         rows = []
 
-        for uid in documents:
+        for x, uid in enumerate(documents):
             # Get article metadata
-            self.cur.execute("SELECT Published, Title, Reference, Publication, Source, Design, Size, Sample, Method, Entry " +
-                             "FROM articles WHERE id = ?", [uid])
+            self.cur.execute("SELECT Published, Title, Reference, Publication, Source, Entry, Id FROM articles WHERE id = ?", [uid])
             article = self.cur.fetchone()
+
+            if x and x % 100 == 0:
+                print(f"Processed {x} documents", end="\r")
 
             # Calculate derived fields
             calculated = self.calculate(uid, metadata)
@@ -166,18 +174,23 @@ class Report(object):
         # Parse column parameters
         fields, params = self.params(metadata)
 
-        # Stores embedding query only and full QA column definitions
-        queries, questions = [], []
+        # Different type of calculations
+        #  1. Similarity query
+        #  2. Extractor query (similarity + question)
+        #  3. Question-answering on other field
+        queries, extractions, questions  = [], [], []
 
         # Retrieve indexed document text for article
         sections = self.sections(uid)
         texts = [text for _, text in sections]
 
-        for name, query, question, snippet, _, _, matches in params:
-            if matches:
+        for name, query, question, snippet, _, _, matches, _ in params:
+            if query.startswith("$"):
+                questions.append((name, query.replace("$", ""), question, snippet))
+            elif matches:
                 queries.append((name, query, matches))
             else:
-                questions.append((name, query, question, snippet))
+                extractions.append((name, query, question, snippet))
 
         # Run all extractor queries against document text
         results = self.extractor.query([query for _, query, _ in queries], texts)
@@ -189,12 +202,25 @@ class Report(object):
                 topn = [text for _, text, _ in results[x]][:matches]
 
                 # Join results into String and return
-                fields[name] = "\n\n".join([self.resolve(params, sections, uid, name, value) for value in topn])
+                value = [self.resolve(params, sections, uid, name, value) for value in topn]
+                fields[name] = "\n\n".join(value) if value else None
             else:
                 fields[name] = None
 
         # Add extraction fields
-        for name, value in self.extractor(questions, texts):
+        for name, value in self.extractor(extractions, texts):
+            # Resolves the full value based on column parameters
+            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
+
+        # Add question fields
+        names, qa, contexts, snippets = [], [], [], []
+        for name, query, question, snippet in questions:
+            names.append(name)
+            qa.append(question)
+            contexts.append(fields[query])
+            snippets.append(snippet)
+
+        for name, value in self.extractor.answers(names, qa, contexts, contexts, snippets):
             # Resolves the full value based on column parameters
             fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
@@ -231,13 +257,14 @@ class Report(object):
                 question = self.variables(column["question"], metadata) if "question" in column else query
 
                 # Additional context parameters
-                section = column["section"] if "section" in column else False
-                surround = column["surround"] if "surround" in column else 0
-                matches = column["matches"] if "matches" in column else 0
-                snippet = column["snippet"] if "snippet" in column else False
+                section = column.get("section", False)
+                surround = column.get("surround", 0)
+                matches = column.get("matches", 0)
+                dtype = column.get("dtype")
+                snippet = column.get("snippet", False)
                 snippet = True if section or surround else snippet
 
-                params.append((column["name"], query, question, snippet, section, surround, matches))
+                params.append((column["name"], query, question, snippet, section, surround, matches, dtype))
 
         return fields, params
 
@@ -276,7 +303,7 @@ class Report(object):
         """
 
         # Retrieve indexed document text for article
-        self.cur.execute(Index.SECTION_QUERY + " AND article = ? ORDER BY id", [uid])
+        self.cur.execute(Index.SECTION_QUERY + " WHERE article = ? ORDER BY id", [uid])
 
         # Get list of document text sections
         sections = []
@@ -307,7 +334,7 @@ class Report(object):
 
         # Get all column parameters
         index = [params.index(x) for x in params if x[0] == name][0]
-        _, _, _, _, section, surround, _ = params[index]
+        _, _, _, _, section, surround, _, dtype = params[index]
 
         if value:
             # Find matching section
@@ -321,6 +348,14 @@ class Report(object):
                     value = self.subsection(uid, sid)
                 elif surround:
                     value = self.surround(uid, sid, surround)
+
+            # Column dtype formatting
+            if dtype == "int":
+                value = Column.integer(value)
+            elif isinstance(dtype, list):
+                value = Column.categorical(self.labels, value, dtype)
+            elif dtype in ["days", "weeks", "months", "years"]:
+                value = Column.duration(value, dtype)
 
         return value
 

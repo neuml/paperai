@@ -25,6 +25,6 @@ class Utils(object):
             MD5 hash
         """
 
-        with open(path, "r") as data:
+        with open(path, "r", encoding="utf-8") as data:
             # Read file into string and build MD5 hash
             return hashlib.md5(data.read().encode()).hexdigest()

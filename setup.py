@@ -1,11 +1,11 @@
 # pylint: disable = C0111
 from setuptools import find_packages, setup
 
-with open("README.md", "r") as f:
+with open("README.md", "r", encoding="utf-8") as f:
     DESCRIPTION = f.read()
 
 setup(name="paperai",
-      version="1.11.0",
+      version="2.0.0",
       author="NeuML",
       description="AI-powered literature discovery and review engine for medical/scientific papers",
       long_description=DESCRIPTION,
@@ -32,6 +32,7 @@ setup(name="paperai",
           "networkx>=2.4",
           "PyYAML>=5.3",
           "regex>=2020.5.14",
+          "text2digits>=0.1.0",
           "txtai[api,similarity]>=3.4.0",
           "txtmarker>=1.0.0"
       ],

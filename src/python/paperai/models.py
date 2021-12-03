@@ -8,7 +8,7 @@ import sqlite3
 
 from txtai.embeddings import Embeddings
 
-class Models(object):
+class Models:
     """
     Common methods for generating data paths.
     """
@@ -95,7 +95,7 @@ class Models(object):
         dbfile = os.path.join(path, "articles.sqlite")
 
         if os.path.isfile(os.path.join(path, "config")):
-            print("Loading model from %s" % path)
+            print(f"Loading model from {path}")
             embeddings = Embeddings()
             embeddings.load(path)
         else:

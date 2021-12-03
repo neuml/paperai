@@ -28,8 +28,8 @@ class Application:
         """
 
         # Default list of columns
-        self.columns = [("Title", True), ("Published", False), ("Publication", False), ("Design", False), ("Sample", False),
-                        ("Method", False), ("Entry", False), ("Id", False), ("Content", True)]
+        self.columns = [("Title", True), ("Published", False), ("Publication", False), ("Entry", False),
+                        ("Id", False), ("Content", True)]
 
         # Load model
         self.path = path
@@ -58,17 +58,16 @@ class Application:
 
             # Print each result, sorted by max score descending
             for uid in sorted(documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True):
-                cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference " +
+                cur.execute("SELECT Title, Published, Publication, Entry, Id, Reference " +
                             "FROM articles WHERE id = ?", [uid])
                 article = cur.fetchone()
 
                 matches = "<br/>".join([text for _, text in documents[uid]])
 
-                title = "<a target='_blank' href='%s'>%s</a>" % (article[9], article[0])
+                title = f"<a target='_blank' href='{article[5]}'>{article[0]}</a>"
 
-                article = {"Title": title, "Published": Query.date(article[1]), "Publication": article[2], "Design": Query.design(article[3]),
-                           "Sample": Query.sample(article[4], article[5]), "Method": Query.text(article[6]), "Entry": article[7],
-                           "Id": article[8], "Content": matches}
+                article = {"Title": title, "Published": Query.date(article[1]), "Publication": article[2], "Entry": article[3],
+                           "Id": article[4], "Content": matches}
 
                 articles.append(article)
 

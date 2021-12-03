@@ -45,7 +45,7 @@ class Annotate(Report):
         self.names = columns
 
         # Do not annotate following columns
-        for field in ["Date", "Study", "Study Link", "Journal", "Study Type", "Sample Size", "Matches", "Entry"]:
+        for field in ["Date", "Study", "Study Link", "Journal", "Matches", "Entry", "Id"]:
             if field in self.names:
                 self.names.remove(field)
 
@@ -61,12 +61,6 @@ class Annotate(Report):
 
         # Source
         row["Source"] = article[4]
-
-        # Sample Text
-        row["Sample Text"] = article[7]
-
-        # Study Population
-        row["Study Population"] = Query.text(article[8] if article[8] else article[7])
 
         # Merge in calculated fields
         row.update(calculated)
@@ -156,7 +150,7 @@ class Annotate(Report):
         patterns.append(r"(\(\d+\)\s){3,}")
 
         # Build regex pattern
-        pattern = re.compile("|".join(["(%s)" % p for p in patterns]))
+        pattern = re.compile("|".join([f"({p})" for p in patterns]))
 
         text = pattern.sub(" ", text)
 

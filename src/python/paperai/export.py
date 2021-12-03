@@ -14,7 +14,7 @@ import regex as re
 from .index import Index
 from .models import Models
 
-class Export(object):
+class Export:
     """
     Exports database rows into a text file line-by-line.
     """
@@ -29,26 +29,26 @@ class Export(object):
             output: output file to store text
         """
 
-        with open(output, "w") as output:
+        with open(output, "w", encoding="utf-8") as output:
             # Connection to database file
             db = sqlite3.connect(dbfile)
             cur = db.cursor()
 
-            # Get all indexed text, with a detected study design, excluding modeling designs
-            cur.execute(Index.SECTION_QUERY + " AND design NOT IN (0, 9)")
+            # Get all indexed text
+            cur.execute(Index.SECTION_QUERY)
 
             count = 0
             for _, name, text in cur:
                 if not name or not re.search(Index.SECTION_FILTER, name.lower()):
                     count += 1
                     if count % 1000 == 0:
-                        print("Streamed %d documents" % (count), end="\r")
+                        print(f"Streamed {count} documents", end="\r")
 
                     # Write row
                     if text:
                         output.write(text + "\n")
 
-            print("Iterated over %d total rows" % (count))
+            print(f"Iterated over {count} total rows")
 
             # Free database resources
             db.close()

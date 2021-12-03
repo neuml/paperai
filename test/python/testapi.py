@@ -38,7 +38,7 @@ class TestAPI(unittest.TestCase):
 
         config = os.path.join(tempfile.gettempdir(), "testapi.yml")
 
-        with open(config, "w") as output:
+        with open(config, "w", encoding="utf-8") as output:
             output.write(INDEX % Utils.PATH)
 
         client = TestClient(app)
@@ -59,7 +59,7 @@ class TestAPI(unittest.TestCase):
 
         # Run search
         params = urllib.parse.urlencode({"query": "+hypertension ci", "limit": 1})
-        results= client.get("search?%s" % params).json()
+        results= client.get(f"search?{params}").json()
 
         # Check number of results
         self.assertEqual(len(results), 1)

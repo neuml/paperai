@@ -13,7 +13,7 @@ from txtai.vectors import WordVectors
 
 from .models import Models
 
-class RowIterator(object):
+class RowIterator:
     """
     Iterates over rows in a database query. Allows for multiple iterations.
     """
@@ -78,18 +78,18 @@ class RowIterator(object):
 
             count += 1
             if count % 1000 == 0:
-                print("Streamed %d documents" % (count), end="\r")
+                print(f"Streamed {count} documents", end="\r")
 
             # Skip documents with no tokens parsed
             if tokens:
                 yield tokens
 
-        print("Iterated over %d total rows" % (count))
+        print(f"Iterated over {count} total rows")
 
         # Free database resources
         db.close()
 
-class Vectors(object):
+class Vectors:
     """
     Methods to build a FastText model.
     """
@@ -142,7 +142,7 @@ class Vectors(object):
 
         if not output:
             # Output file path
-            output = Models.vectorPath("cord19-%dd" % size, True)
+            output = Models.vectorPath(f"cord19-{size}d", True)
 
         # Build word vectors model
         WordVectors.build(tokens, size, mincount, output)

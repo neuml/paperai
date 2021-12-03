@@ -14,7 +14,7 @@ from txtai.pipeline import Tokenizer
 from .highlights import Highlights
 from .models import Models
 
-class Query(object):
+class Query:
     """
     Methods to query an embeddings index.
     """
@@ -238,7 +238,7 @@ class Query(object):
             else:
                 authors = authors.split()[-1]
 
-            return "%s et al" % authors
+            return f"{authors} et al"
 
         return None
 
@@ -290,40 +290,6 @@ class Query(object):
         return text
 
     @staticmethod
-    def design(design):
-        """
-        Formats a study design field.
-
-        Args:
-            design: study design integer
-
-        Returns:
-            Study Design string
-        """
-
-        # Study design type mapping
-        mapping = {1:"Systematic review", 2:"Randomized control trial", 3:"Non-randomized trial",
-                   4:"Prospective observational", 5:"Time-to-event analysis", 6:"Retrospective observational",
-                   7:"Cross-sectional", 8:"Case series", 9:"Modeling", 0:"Other"}
-
-        return mapping[design]
-
-    @staticmethod
-    def sample(size, text):
-        """
-        Formats a sample string.
-
-        Args:
-            size: Sample size
-            text: Sample text
-
-        Returns:
-            Formatted sample text
-        """
-
-        return "[%s] %s" % (size, Query.text(text)) if size else Query.text(text)
-
-    @staticmethod
     def query(embeddings, db, query, topn, threshold):
         """
         Executes a query against the embeddings model.
@@ -341,7 +307,7 @@ class Query(object):
 
         cur = db.cursor()
 
-        print(Query.render("#Query: %s" % query, theme="729.8953") + "\n")
+        print(Query.render(f"#Query: {query}", theme="729.8953") + "\n")
 
         # Query for best matches
         results = Query.search(embeddings, cur, query, topn, threshold)
@@ -349,7 +315,7 @@ class Query(object):
         # Extract top sections as highlights
         print(Query.render("# Highlights"))
         for highlight in Query.highlights(results, int(topn / 5)):
-            print(Query.render("## - %s" % Query.text(highlight)))
+            print(Query.render(f"## - {Query.text(highlight)}"))
 
         print()
 
@@ -360,22 +326,19 @@ class Query(object):
 
         # Print each result, sorted by max score descending
         for uid in sorted(documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True):
-            cur.execute("SELECT Title, Published, Publication, Design, Size, Sample, Method, Entry, Id, Reference FROM articles WHERE id = ?", [uid])
+            cur.execute("SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?", [uid])
             article = cur.fetchone()
 
-            print("Title: %s" % article[0])
-            print("Published: %s" % Query.date(article[1]))
-            print("Publication: %s" % article[2])
-            print("Design: %s" % Query.design(article[3]))
-            print("Sample: %s" % Query.sample(article[4], article[5]))
-            print("Method: %s" % Query.text(article[6]))
-            print("Entry: %s" % article[7])
-            print("Id: %s" % article[8])
-            print("Reference: %s" % article[9])
+            print(f"Title: {article[0]}")
+            print(f"Published: {Query.date(article[1])}")
+            print(f"Publication: {article[2]}")
+            print(f"Entry: {article[3]}")
+            print(f"Id: {article[4]}")
+            print(f"Reference: {article[5]}")
 
             # Print top matches
             for score, text in documents[uid]:
-                print(Query.render("## - (%.4f): %s" % (score, Query.text(text)), html=False))
+                print(Query.render(f"## - ({score:.4f}): {Query.text(text)}", html=False))
 
             print()
 

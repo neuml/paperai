@@ -11,7 +11,7 @@ from .task import Task
 
 from ..models import Models
 
-class Execute(object):
+class Execute:
     """
     Creates a Report
     """
@@ -71,10 +71,10 @@ class Execute(object):
         report = Execute.create(render, embeddings, db, options)
 
         # Generate output filename
-        outfile = os.path.join(outdir, "%s.%s" % (name, render))
+        outfile = os.path.join(outdir, f"{name}.{render}")
 
         # Stream report to file
-        with open(outfile, "w") as output:
+        with open(outfile, "w", encoding="utf-8") as output:
             # Build the report
             report.build(queries, options, output)
 

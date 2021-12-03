@@ -6,7 +6,7 @@ import os
 
 import yaml
 
-class Task(object):
+class Task:
     """
     YAML task configuration loader
     """
@@ -25,7 +25,7 @@ class Task(object):
 
         if os.path.exists(task):
             # Load tasks yml file
-            with open(task, "r") as f:
+            with open(task, "r", encoding="utf-8") as f:
                 # Read configuration
                 config = yaml.safe_load(f)
 

@@ -31,7 +31,7 @@ class CSV(Report):
         if self.csvout:
             self.csvout.close()
 
-        self.csvout = open(os.path.join(os.path.dirname(output.name), "%s.csv" % task), "w", newline="")
+        self.csvout = open(os.path.join(os.path.dirname(output.name), f"{task}.csv"), "w", newline="", encoding="utf-8")
         self.writer = csv.writer(self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     def write(self, row):
@@ -69,23 +69,14 @@ class CSV(Report):
         # Source
         row["Source"] = article[4]
 
-        # Study Type
-        row["Study Type"] = Query.design(article[5])
-
-        # Sample Size
-        row["Sample Size"] = article[6]
-
-        # Study Population
-        row["Study Population"] = Query.text(article[8] if article[8] else article[7])
-
-        # Sample Text
-        row["Sample Text"] = article[7]
-
         # Top Matches
         row["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
-        row["Entry"] = article[9] if article[9] else ""
+        row["Entry"] = article[5] if article[5] else ""
+
+        # Id
+        row["Id"] = article[6]
 
         # Merge in calculated fields
         row.update(calculated)

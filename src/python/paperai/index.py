@@ -14,14 +14,14 @@ from txtai.pipeline import Tokenizer
 
 from .models import Models
 
-class Index(object):
+class Index:
     """
     Methods to build a new sentence embeddings index.
     """
 
     # Section query and filtering logic constants
     SECTION_FILTER = r"background|(?<!.*?results.*?)discussion|introduction|reference"
-    SECTION_QUERY = "SELECT Id, Name, Text FROM sections WHERE (labels is null or labels NOT IN ('FRAGMENT', 'QUESTION'))"
+    SECTION_QUERY = "SELECT Id, Name, Text FROM sections"
 
     @staticmethod
     def stream(dbfile, maxsize):
@@ -37,11 +37,11 @@ class Index(object):
         db = sqlite3.connect(dbfile)
         cur = db.cursor()
 
-        # Select tagged sentences without a NLP label. NLP labels are set for non-informative sentences.
-        query = Index.SECTION_QUERY + " AND tags is not null"
+        # Select sentences from tagged articles
+        query = Index.SECTION_QUERY + " WHERE article in (SELECT article FROM articles a WHERE a.id = article AND a.tags IS NOT NULL)"
 
         if maxsize > 0:
-            query += " AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT %d)" % maxsize
+            query += f" AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT {maxsize})"
 
         # Run the query
         cur.execute(query)
@@ -59,13 +59,13 @@ class Index(object):
 
                 count += 1
                 if count % 1000 == 0:
-                    print("Streamed %d documents" % (count), end="\r")
+                    print(f"Streamed {count} documents", end="\r")
 
                 # Skip documents with no tokens parsed
                 if tokens:
                     yield document
 
-        print("Iterated over %d total rows" % (count))
+        print(f"Iterated over {count} total rows")
 
         # Free database resources
         db.close()
@@ -88,7 +88,7 @@ class Index(object):
 
         # Read YAML index configuration
         if vectors.endswith(".yml"):
-            with open(vectors, "r") as f:
+            with open(vectors, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
 
         return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}

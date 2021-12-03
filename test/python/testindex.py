@@ -20,7 +20,7 @@ class TestIndex(unittest.TestCase):
         """
 
         # Full index stream
-        self.assertEqual(len(list(Index.stream(Utils.DBFILE, 0))), 21478)
+        self.assertEqual(len(list(Index.stream(Utils.DBFILE, 0))), 29218)
 
         # Partial index stream - top n documents by entry date
-        self.assertEqual(len(list(Index.stream(Utils.DBFILE, 10))), 224)
+        self.assertEqual(len(list(Index.stream(Utils.DBFILE, 10))), 287)

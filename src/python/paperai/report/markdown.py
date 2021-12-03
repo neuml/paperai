@@ -48,20 +48,20 @@ class Markdown(Report):
             line: line to write
         """
 
-        output.write("%s\n" % line)
+        output.write(f"{line}\n")
 
     def query(self, output, task, query):
-        self.write(output, "# %s" % query)
+        self.write(output, f"# {query}")
 
     def section(self, output, name):
-        self.write(output, "#### %s<br/>" % name)
+        self.write(output, f"#### {name}<br/>")
 
     def highlight(self, output, article, highlight):
         # Build citation link
-        link = "[%s](%s)" % (Query.authors(article[0]) if article[0] else "Source", self.encode(article[1]))
+        link = f"[{Query.authors(article[0]) if article[0] else 'Source'}]({self.encode(article[1])})"
 
         # Build highlight row with citation link
-        self.write(output, "- %s %s<br/>" % (Query.text(highlight), link))
+        self.write(output, f"- {Query.text(highlight)} {link}<br/>")
 
     def headers(self, columns, output):
         self.names = columns
@@ -73,11 +73,11 @@ class Markdown(Report):
 
         # Write table header
         headers = "|".join(self.names)
-        self.write(output, "|%s|" % headers)
+        self.write(output, f"|{headers}|")
 
         # Write markdown separator for headers
         headers = "|".join(["----"] * len(self.names))
-        self.write(output, "|%s|" % headers)
+        self.write(output, f"|{headers}|")
 
     def buildRow(self, article, sections, calculated):
         row = {}
@@ -86,10 +86,10 @@ class Markdown(Report):
         row["Date"] = Query.date(article[0]) if article[0] else ""
 
         # Title
-        title = "[%s](%s)" % (article[1], self.encode(article[2]))
+        title = f"[{article[1]}]({self.encode(article[2])})"
 
         # Append Publication if available. Assume preprint otherwise and show preprint source.
-        title += "<br/>%s" % (article[3] if article[3] else article[4])
+        title += f"<br/>{article[3] if article[3] else article[4]}"
 
         # Source
         row["Source"] = article[4]
@@ -97,30 +97,23 @@ class Markdown(Report):
         # Title + Publication if available
         row["Study"] = title
 
-        # Study Type
-        row["Study Type"] = Query.design(article[5])
-
-        # Sample Size
-        sample = Query.sample(article[6], article[7])
-        row["Sample Size"] = sample if sample else ""
-
-        # Study Population
-        row["Study Population"] = Query.text(article[8]) if article[8] else ""
-
         # Top Matches
         row["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
-        row["Entry"] = article[9] if article[9] else ""
+        row["Entry"] = article[5] if article[5] else ""
+
+        # Id
+        row["Id"] = article[6]
 
         # Merge in calculated fields
         row.update(calculated)
 
         # Escape | characters embedded within columns
-        return {column: self.column(row[column]) for column in row}
+        return {name: self.column(value) for name, value in row.items()}
 
     def writeRow(self, output, row):
-        self.write(output, "|%s|" % "|".join(row))
+        self.write(output, f"|{'|'.join(row)}|")
 
     def separator(self, output):
         # Write section separator

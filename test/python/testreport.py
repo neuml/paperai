@@ -2,7 +2,6 @@
 Report module tests
 """
 
-import os
 import unittest
 
 # pylint: disable=E0401
@@ -15,7 +14,6 @@ class TestReport(unittest.TestCase):
     Report tests
     """
 
-    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testReport1(self):
         """
         Runs test queries from report1.yml test file
@@ -25,16 +23,15 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report1.yml", 10, "csv", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report1.yml", 10, "md", Utils.PATH, None)
 
-        hashes = [("Age.csv", "ed2b9c761dc949708cd6254e6207ff83"),
-                  ("Heart Disease.csv", "90f2dede871c545dd1492aef8ed84645"),
-                  ("Heart Failure.csv", "2152a8187ff53e9c4224e3c9891b5b33"),
-                  ("Report1.md", "2da3dbcde55153ddaed1e709314eac07")]
+        hashes = [("Age.csv", "e5d589d131dce3293532e3fd19593637"),
+                  ("Heart Disease.csv", "96b144fc1566e2c0aa774d098e203922"),
+                  ("Heart Failure.csv", "afd812f7875c4fcb45bf800952327dba"),
+                  ("Report1.md", "f1f3b70dd6242488f8d58e1e5d2faea6")]
 
         # Check file hashes
         for name, value in hashes:
             self.assertEqual(Utils.hashfile(Utils.PATH + "/" + name), value)
 
-    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testReport2(self):
         """
         Runs test queries from report2.yml test file
@@ -44,17 +41,16 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report2.yml", 10, "csv", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report2.yml", 10, "md", Utils.PATH, None)
 
-        hashes = [("Match.csv", "2def38a008f33f25d7ab4a763d159e80"),
-                  ("MatchSurround.csv", "e9f581d19b8802822f47261bce0e91b1"),
-                  ("Section.csv", "7ae8b295f0d959ba12410807db7b7e48"),
-                  ("Surround.csv", "fed9fb4249bf2f73fa9822753d359207"),
-                  ("Report2.md", "9218fe80fe5e9fdd50c5719f54c52061")]
+        hashes = [("Match.csv", "9cb5ce8896355d049084d61fae13d97f"),
+                  ("MatchSurround.csv", "47e4d2ec7ae8fda30a78d628d124f204"),
+                  ("Section.csv", "7113d5af95542193fc3dc21dc785b014"),
+                  ("Surround.csv", "14d124f85c140077d58ae3636ba8557f"),
+                  ("Report2.md", "7813d253d7a792f93915c2dccfb78483")]
 
         # Check file hashes
         for name, value in hashes:
             self.assertEqual(Utils.hashfile(Utils.PATH + "/" + name), value)
 
-    @unittest.skipIf(os.name == "nt", "Faiss not installed on Windows")
     def testReport3(self):
         """
         Runs test queries from report3.yml test file
@@ -65,8 +61,9 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report3.yml", 1, "md", Utils.PATH, None)
         Execute.run(Utils.PATH + "/report3.yml", 1, "ant", Utils.PATH, None, Utils.PATH)
 
-        hashes = [("AI.csv", "b47e96639a210d2089a5bd4e7e7bfc98"),
-                  ("Report3.md", "1a47340bc135fc086160c62f8731edee")]
+        hashes = [("AI.csv", "94f0bead413eb71835c3f27881b29c91"),
+                  ("All.csv", "3bca7a39a541fa68b3ef457625fb0120"),
+                  ("Report3.md", "0fc53703dace57e3403294fb8ea7e9d1")]
 
         # Check file hashes
         for name, value in hashes:

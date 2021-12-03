@@ -46,11 +46,11 @@ The easiest way to install is via pip and PyPI
 
     pip install paperai
 
-You can also install paperai directly from GitHub. Using a Python Virtual Environment is recommended.
+Python 3.6+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
+
+paperai can also be installed directly from GitHub to access the latest, unreleased features.
 
     pip install git+https://github.com/neuml/paperai
-
-Python 3.6+ is supported
 
 See [this link](https://github.com/neuml/txtai#installation) to help resolve environment-specific install issues.
 
@@ -125,7 +125,7 @@ no parameters are passed in.
 ## Building a report file
 Reports support generating output in multiple formats. An example report call:
 
-    python -m paperai.report tasks/risks.yml 50 md cord19/models
+    python -m paperai.report report.yml 50 md cord19/models
 
 The following report formats are supported:
 
@@ -133,7 +133,7 @@ The following report formats are supported:
 - CSV - Renders a CSV report. Columns and answers are extracted from articles with the results stored in a CSV file.
 - Annotation - Columns and answers are extracted from articles with the results annotated over the original PDF files. Requires passing in a path with the original PDF files.
 
-In the example above, a file named tasks/risk_factors.md will be created. Example report configuration files can be found [here](https://github.com/neuml/cord19q/tree/master/tasks).
+In the example above, a file named report.md will be created. Example report configuration files can be found [here](https://github.com/neuml/cord19q/tree/master/tasks).
 
 ## Running queries
 The fastest way to run queries is to start a paperai shell
