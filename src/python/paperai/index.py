@@ -12,8 +12,6 @@ import yaml
 from txtai.embeddings import Embeddings
 from txtai.pipeline import Tokenizer
 
-from .models import Models
-
 
 class Index:
     """
@@ -86,10 +84,6 @@ class Index:
             configuration
         """
 
-        # Default vectors
-        if not vectors:
-            vectors = Models.vectorPath("cord19-300d.magnitude")
-
         # Read YAML index configuration
         if vectors.endswith(".yml"):
             with open(vectors, "r", encoding="utf-8") as f:
@@ -129,14 +123,10 @@ class Index:
         Executes an index run.
 
         Args:
-            path: model path, if None uses default path
+            path: model path
             vectors: path to vectors file or configuration, if None uses default path
             maxsize: maximum number of documents to process
         """
-
-        # Default path if not provided
-        if not path:
-            path = Models.modelPath()
 
         dbfile = os.path.join(path, "articles.sqlite")
 

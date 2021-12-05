@@ -119,8 +119,7 @@ This example assumes the database and model path is cord19/models. Substitute as
     python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
     ```
 
-The paperai.index process takes two optional arguments, the model path and the vector file path. The default model location is ~/.cord19 if
-no parameters are passed in.
+The paperai.index process takes two required arguments, the model path and the vector file path.
 
 ## Building a report file
 Reports support generating output in multiple formats. An example report call:

@@ -11,8 +11,6 @@ import tempfile
 from txtai.pipeline import Tokenizer
 from txtai.vectors import WordVectors
 
-from .models import Models
-
 
 class RowIterator:
     """
@@ -128,25 +126,17 @@ class Vectors:
         Builds a word vector model.
 
         Args:
-            path: model path, if None uses default path
+            path: model path
             size: dimensions for fastText model
             mincount: minimum number of times a token must appear in input
-            output: output file path, if None uses default path
+            output: output file path
         """
-
-        # Default path if not provided
-        if not path:
-            path = Models.modelPath()
 
         # Derive path to dbfile
         dbfile = os.path.join(path, "articles.sqlite")
 
         # Stream tokens to temporary file
         tokens = Vectors.tokens(dbfile)
-
-        if not output:
-            # Output file path
-            output = Models.vectorPath(f"cord19-{size}d", True)
 
         # Build word vectors model
         WordVectors.build(tokens, size, mincount, output)

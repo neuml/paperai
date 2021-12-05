@@ -12,7 +12,6 @@ import regex as re
 # pylint: disable=E0611
 # Defined at runtime
 from .index import Index
-from .models import Models
 
 
 class Export:
@@ -63,10 +62,6 @@ class Export:
             output: output file path
             path: model path, if None uses default path
         """
-
-        # Default path if not provided
-        if not path:
-            path = Models.modelPath()
 
         # Derive path to dbfile
         dbfile = os.path.join(path, "articles.sqlite")
