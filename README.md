@@ -100,7 +100,7 @@ The following section show how to build an embeddings index for a SQLite article
 
 1. Get vector model
 
-    Run following script to download CORD-19 [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
+    Run following script to download [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
 
     ```bash
     scripts/getvectors.sh cord19/vectors
