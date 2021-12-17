@@ -53,7 +53,7 @@ paperai can also be installed directly from GitHub to access the latest, unrelea
 
     pip install git+https://github.com/neuml/paperai
 
-See [this link](https://github.com/neuml/txtai#installation) to help resolve environment-specific install issues.
+See [this link](https://neuml.github.io/txtai/install/#environment-specific-prerequisites) to help resolve environment-specific install issues.
 
 ### Docker
 
