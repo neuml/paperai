@@ -42,11 +42,12 @@ paperai and/or NeuML has been recognized in the following articles:
 - [Data scientists assist medical researchers in the fight against COVID-19](https://cloud.google.com/blog/products/ai-machine-learning/how-kaggle-data-scientists-help-with-coronavirus)
 
 ## Installation
+
 The easiest way to install is via pip and PyPI
 
     pip install paperai
 
-Python 3.6+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
+Python 3.7+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
 
 paperai can also be installed directly from GitHub to access the latest, unreleased features.
 
@@ -95,23 +96,21 @@ The following notebooks and applications demonstrate the capabilities provided b
 ## Building a model
 paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
-The following sections show how to build an index for a SQLite articles database.
+The following section show how to build an embeddings index for a SQLite articles database. This example assumes the database and model path is cord19/models. Substitute as appropriate.
 
-This example assumes the database and model path is cord19/models. Substitute as appropriate.
+1. Get vector model
 
-1. Download [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
+    Run following script to download CORD-19 [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
 
     ```bash
     scripts/getvectors.sh cord19/vectors
     ```
 
-    A full vector model build can optionally be run with the following command.
+    A full vector model build for fastText models can optionally be run with the following command.
 
     ```bash
     python -m paperai.vectors cord19/models
     ```
-
-    [CORD-19 fastText vectors](https://www.kaggle.com/davidmezzetti/cord19-fasttext-vectors) are also available on Kaggle.
 
 2. Build embeddings index
 
@@ -119,7 +118,7 @@ This example assumes the database and model path is cord19/models. Substitute as
     python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
     ```
 
-The paperai.index process takes two required arguments, the model path and the vector file path.
+The paperai.index process takes two required arguments, the model path and the vector model path. In this case, the vector model is a CORD-19 fastText model but it can also any supported [transformers model](https://huggingface.co/models?pipeline_tag=sentence-similarity).
 
 ## Building a report file
 Reports support generating output in multiple formats. An example report call:
@@ -142,9 +141,7 @@ The fastest way to run queries is to start a paperai shell
 A prompt will come up. Queries can be typed directly into the console.
 
 ## Tech Overview
-The tech stack is built on Python and creates a sentence embeddings index with FastText + BM25. Background on this method can be found in this [Medium article](https://towardsdatascience.com/building-a-sentence-embedding-index-with-fasttext-and-bm25-f07e7148d240). 
-
-The model is a combination of a sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. FastText vectors are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce the most relevant results.
+The model is a combination of a sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Sentence embeddings are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce the most relevant results.
 
 Multiple entry points exist to interact with the model.
 
