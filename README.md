@@ -97,7 +97,7 @@ The following notebooks and applications demonstrate the capabilities provided b
 
 paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
-The following section show how to build an embeddings index for a SQLite articles database. This example assumes the database and model path is cord19/models. Substitute as appropriate.
+The following sections show how to build an embeddings index for a SQLite articles database. This example assumes the database and model path is cord19/models. Substitute as appropriate.
 
 1. Get vector model
 
