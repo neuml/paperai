@@ -32,12 +32,12 @@ class Column:
 
         try:
             # Convert numeric words to numbers
-            text = text if text.isnumeric() else Text2Digits().convert(text)
+            text = text if text.isdigit() else Text2Digits().convert(text)
         # pylint: disable=W0702
         except:
             pass
 
-        return text if text.isnumeric() else None
+        return text if text.isdigit() else None
 
     @staticmethod
     def categorical(model, text, labels):
@@ -104,7 +104,7 @@ class Column:
             data[1] = data[1] + "s"
 
         if len(data) == 2 and (
-            data[0].replace(".", "", 1).isnumeric()
+            data[0].replace(".", "", 1).isdigit()
             and data[1] in (["days", "weeks", "months", "years"])
         ):
 
