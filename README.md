@@ -94,6 +94,7 @@ The following notebooks and applications demonstrate the capabilities provided b
 | [Search](https://github.com/neuml/paperai/blob/master/examples/search.py) | Search a paperai index. Set query parameters, execute searches and display results. |
 
 ## Building a model
+
 paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
 
 The following section show how to build an embeddings index for a SQLite articles database. This example assumes the database and model path is cord19/models. Substitute as appropriate.
@@ -121,6 +122,7 @@ The following section show how to build an embeddings index for a SQLite article
 The paperai.index process takes two required arguments, the model path and the vector model path. In this case, the vector model is a CORD-19 fastText model but it can also any supported [transformers model](https://huggingface.co/models?pipeline_tag=sentence-similarity).
 
 ## Building a report file
+
 Reports support generating output in multiple formats. An example report call:
 
     python -m paperai.report report.yml 50 md cord19/models
@@ -134,6 +136,7 @@ The following report formats are supported:
 In the example above, a file named report.md will be created. Example report configuration files can be found [here](https://github.com/neuml/cord19q/tree/master/tasks).
 
 ## Running queries
+
 The fastest way to run queries is to start a paperai shell
 
     paperai cord19/models
@@ -141,6 +144,7 @@ The fastest way to run queries is to start a paperai shell
 A prompt will come up. Queries can be typed directly into the console.
 
 ## Tech Overview
+
 The model is a combination of a sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Sentence embeddings are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce the most relevant results.
 
 Multiple entry points exist to interact with the model.
