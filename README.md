@@ -119,7 +119,7 @@ The following sections show how to build an embeddings index for a SQLite articl
     python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
     ```
 
-The paperai.index process takes two required arguments, the model path and the vector model path. In this case, the vector model is a CORD-19 fastText model but it can also any supported [transformers model](https://huggingface.co/models?pipeline_tag=sentence-similarity).
+The paperai.index process takes two required arguments, the model path and the vector model path. In this case, the vector model is a CORD-19 fastText model but it can also be any supported [transformers model](https://huggingface.co/models?pipeline_tag=sentence-similarity).
 
 ## Building a report file
 
