@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="paperai",
-    version="2.0.0",
+    version="2.1.0",
     author="NeuML",
     description="AI-powered literature discovery and review engine for medical/scientific papers",
     long_description=DESCRIPTION,
