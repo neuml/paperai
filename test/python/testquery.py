@@ -29,7 +29,7 @@ class TestQuery(unittest.TestCase):
             with redirect_stdout(query):
                 Query.run("risk factors studied", 10, Utils.PATH)
 
-        with open(Utils.PATH + "/query.txt", "w", encoding="utf-8") as f:
+        with open(Utils.PATH + "/query.txt", "r", encoding="utf-8") as f:
             print(f.read())
 
         self.assertEqual(
