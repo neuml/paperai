@@ -2,6 +2,7 @@
 Report module tests
 """
 
+import os
 import unittest
 
 from paperai.report.execute import Execute
@@ -15,6 +16,7 @@ class TestReport(unittest.TestCase):
     Report tests
     """
 
+    @unittest.skipIf(os.name == "nt", "testReport1 skipped on Windows")
     def testReport1(self):
         """
         Runs test queries from report1.yml test file
