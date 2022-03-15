@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
         run: |
           pip install -U pip
           pip install -U wheel coverage coveralls
-          pip install . nltk==3.6.5
+          pip install .
           python -c "import nltk; nltk.download('punkt')"
           python --version
           make data coverage
