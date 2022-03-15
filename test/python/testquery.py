@@ -2,7 +2,6 @@
 Query module tests
 """
 
-import os
 import unittest
 
 from contextlib import redirect_stdout
@@ -13,7 +12,6 @@ from paperai.query import Query
 from utils import Utils
 
 
-@unittest.skipIf(os.name == "nt", "TestQuery skipped on Windows")
 class TestQuery(unittest.TestCase):
     """
     Query tests
