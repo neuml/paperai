@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -22,12 +22,12 @@ jobs:
 
       - name: Install dependencies - Windows
         run: choco install wget
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-latest'
 
       - name: Build
         run: |
           pip install -U pip
-          pip install -U wheel coverage coveralls
+          pip install -U wheel coverage==6.2 coveralls
           pip install .
           python -c "import nltk; nltk.download('punkt')"
           python --version
