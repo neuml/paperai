@@ -59,7 +59,7 @@ class TestAPI(unittest.TestCase):
         """
 
         # Build embeddings index
-        Index.run(Utils.PATH, Utils.VECTORFILE)
+        Index.run(Utils.PATH, {"path": Utils.VECTORFILE, "parallel": False})
 
         # Connect to test instance
         client = TestAPI.start()
