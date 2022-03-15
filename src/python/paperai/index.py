@@ -89,7 +89,7 @@ class Index:
             with open(vectors, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
 
-        return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
+        return {"path": vectors, "scoring": "bm25", "pca": 3, "backend": "annoy"}
 
     @staticmethod
     def embeddings(dbfile, vectors, maxsize):
