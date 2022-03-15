@@ -35,7 +35,7 @@ setup(
         "python-dateutil>=2.8.1",
         "regex>=2020.5.14",
         "text2digits>=0.1.0",
-        "txtai[api,similarity]>=3.7.0",
+        "txtai[api,similarity]==3.7.0",
         "txtmarker>=1.0.0",
     ],
     classifiers=[
