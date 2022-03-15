@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies - Windows
         run: choco install wget
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
 
       - name: Build
         run: |
