@@ -53,14 +53,10 @@ class TestAPI(unittest.TestCase):
 
         return client
 
-    @patch("os.cpu_count")
-    def testSearch(self, cpucount):
+    def testSearch(self):
         """
         Test search via API
         """
-
-        # Mock CPU count
-        cpucount.return_value = 1
 
         # Build embeddings index
         Index.run(Utils.PATH, Utils.VECTORFILE)
