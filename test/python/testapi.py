@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 
 from txtai.api import app, start
 
+from paperai.modles import Models
 from paperai.index import Index
 
 # pylint: disable=C0411
@@ -60,6 +61,13 @@ class TestAPI(unittest.TestCase):
 
         # Build embeddings index
         Index.run(Utils.PATH, Utils.VECTORFILE)
+
+        # Load model
+        embeddings, db = Models.load(Utils.PATH)
+
+        print(embeddings.similarity("test1", "test2"))
+
+        db.close()
 
         # Connect to test instance
         client = TestAPI.start()
