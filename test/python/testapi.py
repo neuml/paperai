@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 
 from txtai.api import app, start
 
-from paperai.modles import Models
+from paperai.models import Models
 from paperai.index import Index
 
 # pylint: disable=C0411
