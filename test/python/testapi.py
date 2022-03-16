@@ -65,7 +65,8 @@ class TestAPI(unittest.TestCase):
         # Load model
         embeddings, db = Models.load(Utils.PATH)
 
-        print(embeddings.similarity("test1", "test2"))
+        print(embeddings.similarity("test1", ["test2"]))
+        print(embeddings.similarity("test1", ["test2 hypertension"]))
 
         db.close()
 
