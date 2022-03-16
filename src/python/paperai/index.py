@@ -49,9 +49,7 @@ class Index:
         cur.execute(query)
 
         count = 0
-        for x, row in enumerate(cur):
-            print(x, row)
-
+        for row in cur:
             # Unpack row
             uid, name, text = row
 
