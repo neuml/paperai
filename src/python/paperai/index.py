@@ -115,6 +115,8 @@ class Index:
         # Build embeddings index
         embeddings.index(Index.stream(dbfile, maxsize))
 
+        print(embeddings.config)
+
         return embeddings
 
     @staticmethod
