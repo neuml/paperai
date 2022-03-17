@@ -59,7 +59,15 @@ class TestAPI(unittest.TestCase):
         """
 
         # Build embeddings index
-        Index.run(Utils.PATH, Utils.VECTORFILE)
+        Index.run(
+            Utils.PATH,
+            {
+                "path": Utils.VECTORFILE,
+                "scoring": "bm25",
+                "pca": 3,
+                "faiss": {"nprobe": 6, "components": "IVF100,SQ8"},
+            },
+        )
 
         # Connect to test instance
         client = TestAPI.start()
