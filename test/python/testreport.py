@@ -25,10 +25,10 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report1.yml", 10, "md", Utils.PATH, None)
 
         hashes = [
-            ("Age.csv", "34448eab17f2a127714fc42ba4baaa78"),
+            ("Age.csv", "e5d589d131dce3293532e3fd19593637"),
             ("Heart Disease.csv", "96b144fc1566e2c0aa774d098e203922"),
             ("Heart Failure.csv", "afd812f7875c4fcb45bf800952327dba"),
-            ("Report1.md", "d3d4682f35662dd1e3665e816e5529ec"),
+            ("Report1.md", "f1f3b70dd6242488f8d58e1e5d2faea6"),
         ]
 
         # Check file hashes

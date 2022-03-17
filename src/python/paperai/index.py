@@ -89,7 +89,13 @@ class Index:
             with open(vectors, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
 
-        return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
+        return {
+            "path": vectors,
+            "scoring": "bm25",
+            "pca": 3,
+            "quantize": True,
+            "faiss": {"nprobe": 6, "components": "IVF100,SQ8"},
+        }
 
     @staticmethod
     def embeddings(dbfile, vectors, maxsize):
@@ -114,8 +120,6 @@ class Index:
 
         # Build embeddings index
         embeddings.index(Index.stream(dbfile, maxsize))
-
-        print(embeddings.config)
 
         return embeddings
 

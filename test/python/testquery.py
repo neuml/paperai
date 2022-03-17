@@ -31,5 +31,5 @@ class TestQuery(unittest.TestCase):
 
         self.assertEqual(
             Utils.hashfile(Utils.PATH + "/query.txt"),
-            "c81b87b34b7efec05b79e61de319e6df",
+            "b7ba65adc0aacccf161d61da8616bfca",
         )
