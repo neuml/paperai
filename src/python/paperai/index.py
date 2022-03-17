@@ -84,18 +84,17 @@ class Index:
             configuration
         """
 
-        # Read YAML index configuration
-        if vectors.endswith(".yml"):
+        # Configuration as a dictionary
+        if isinstance(vectors, dict):
+            return vectors
+
+        # Configuration as a YAML file
+        if isinstance(vectors, str) and vectors.endswith(".yml"):
             with open(vectors, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
 
-        return {
-            "path": vectors,
-            "scoring": "bm25",
-            "pca": 3,
-            "quantize": True,
-            "faiss": {"nprobe": 6, "components": "IVF100,SQ8"},
-        }
+        # Default configuration
+        return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
 
     @staticmethod
     def embeddings(dbfile, vectors, maxsize):
