@@ -4,6 +4,12 @@ from setuptools import find_packages, setup
 with open("README.md", "r", encoding="utf-8") as f:
     DESCRIPTION = f.read()
 
+# Optional dependencies
+extras = {}
+
+# Development dependencies
+extras["dev"] = ["black", "coverage", "coveralls", "httpx", "pre-commit", "pylint"]
+
 setup(
     name="paperai",
     version="2.1.0",
@@ -38,6 +44,7 @@ setup(
         "txtai[api,similarity]>=4.3.1",
         "txtmarker>=1.0.0",
     ],
+    extra_requires=extras,
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
