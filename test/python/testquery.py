@@ -29,9 +29,7 @@ class TestQuery(unittest.TestCase):
             with redirect_stdout(query):
                 Query.run("risk factors studied", 10, Utils.PATH)
 
-        Query.run("risk factors studied", 10, Utils.PATH)
-
         self.assertEqual(
             Utils.hashfile(Utils.PATH + "/query.txt"),
-            "39c79c4dad7d9225e6cbcec81edff04f",
+            "0413b97092f4ea58f7b15750582c4ad2",
         )

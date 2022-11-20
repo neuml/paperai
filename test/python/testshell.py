@@ -30,4 +30,4 @@ class TestShell(unittest.TestCase):
             shell.default("+hypertension ci")
         shell.postloop()
 
-        self.assertTrue("1.28 (1.06 to 1.53) P-value 0.009" in output.getvalue())
+        self.assertTrue("hypertension" in output.getvalue())

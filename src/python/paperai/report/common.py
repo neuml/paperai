@@ -219,9 +219,9 @@ class Report:
                 value = [
                     self.resolve(params, sections, uid, name, value) for value in topn
                 ]
-                fields[name] = "\n\n".join(value) if value else None
+                fields[name] = "\n\n".join(value) if value else ""
             else:
-                fields[name] = None
+                fields[name] = ""
 
         # Add extraction fields
         for name, value in self.extractor(extractions, texts):
