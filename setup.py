@@ -44,7 +44,7 @@ setup(
         "txtai[api,similarity]>=4.3.1",
         "txtmarker>=1.0.0",
     ],
-    extra_requires=extras,
+    extras_requires=extras,
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
