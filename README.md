@@ -23,7 +23,7 @@
         <img src="https://github.com/neuml/paperai/workflows/build/badge.svg" alt="Build Status"/>
     </a>
     <a href="https://coveralls.io/github/neuml/paperai?branch=master">
-        <img src="https://img.shields.io/coveralls/github/neuml/paperai" alt="Coverage Status">
+        <img src="https://img.shields.io/coverallsCoverage/github/neuml/paperai" alt="Coverage Status">
     </a>
 </p>
 
