@@ -18,6 +18,7 @@ jobs:
 
       - name: Install dependencies - MacOS
         run: brew install libomp
+        if: matrix.os == 'macos-latest'
 
       - name: Install dependencies - Windows
         run: choco install wget
