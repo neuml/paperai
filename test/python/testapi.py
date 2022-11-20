@@ -65,7 +65,7 @@ class TestAPI(unittest.TestCase):
                 "path": Utils.VECTORFILE,
                 "scoring": "bm25",
                 "pca": 3,
-                "faiss": {"nprobe": 6, "components": "IVF100,SQ8"},
+                "faiss": {"nprobe": 6, "components": "IVF100,Flat"},
             },
         )
 
