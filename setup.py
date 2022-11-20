@@ -35,6 +35,7 @@ setup(
     },
     install_requires=[
         "html2markdown>=0.1.7",
+        "markdown==3.3.7",
         "mdv3>=2.0.1",
         "networkx>=2.4",
         "PyYAML>=5.3",
