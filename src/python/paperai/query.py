@@ -140,11 +140,14 @@ class Query:
             if token.startswith("-") and len(token) > 1
         ]
 
-        # Tokenize search query
-        query = Tokenizer.tokenize(query)
+        # Tokenize search query, if necessary
+        query = Tokenizer.tokenize(query) if embeddings.scoring else query
 
         # Retrieve topn * 5 to account for duplicate matches
-        for uid, score in embeddings.search(query, topn * 5):
+        for result in embeddings.search(query, topn * 5):
+            uid, score = (
+                (result["id"], result["score"]) if isinstance(result, dict) else result
+            )
             if score >= threshold:
                 cur.execute("SELECT Article, Text FROM sections WHERE id = ?", [uid])
 
@@ -328,11 +331,13 @@ class Query:
         results = Query.search(embeddings, cur, query, topn, threshold)
 
         # Extract top sections as highlights
-        print(Query.render("# Highlights"))
-        for highlight in Query.highlights(results, int(topn / 5)):
-            print(Query.render(f"## - {Query.text(highlight)}"))
+        highlights = Query.highlights(results, int(topn / 5))
+        if highlights:
+            print(Query.render("# Highlights"))
+            for highlight in highlights:
+                print(Query.render(f"## - {Query.text(highlight)}"))
 
-        print()
+            print()
 
         # Get results grouped by document
         documents = Query.documents(results, topn)

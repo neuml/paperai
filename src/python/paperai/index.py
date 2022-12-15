@@ -23,13 +23,14 @@ class Index:
     SECTION_QUERY = "SELECT Id, Name, Text FROM sections"
 
     @staticmethod
-    def stream(dbfile, maxsize):
+    def stream(dbfile, maxsize, scoring):
         """
         Streams documents from an articles.sqlite file. This method is a generator and will yield a row at time.
 
         Args:
             dbfile: input SQLite file
             maxsize: maximum number of documents to process
+            scoring: True if index uses a scoring model, False otherwise
         """
 
         # Connection to database file
@@ -53,18 +54,22 @@ class Index:
             # Unpack row
             uid, name, text = row
 
-            if not name or not re.search(Index.SECTION_FILTER, name.lower()):
+            if (
+                not scoring
+                or not name
+                or not re.search(Index.SECTION_FILTER, name.lower())
+            ):
                 # Tokenize text
-                tokens = Tokenizer.tokenize(text)
+                text = Tokenizer.tokenize(text) if scoring else text
 
-                document = (uid, tokens, None)
+                document = (uid, text, None)
 
                 count += 1
                 if count % 1000 == 0:
                     print(f"Streamed {count} documents", end="\r")
 
                 # Skip documents with no tokens parsed
-                if tokens:
+                if text:
                     yield document
 
         print(f"Iterated over {count} total rows")
@@ -112,13 +117,14 @@ class Index:
 
         # Read config and create Embeddings instance
         embeddings = Embeddings(Index.config(vectors))
+        scoring = embeddings.scoring
 
         # Build scoring index if scoring method provided
-        if embeddings.config.get("scoring"):
-            embeddings.score(Index.stream(dbfile, maxsize))
+        if scoring:
+            embeddings.score(Index.stream(dbfile, maxsize, scoring))
 
         # Build embeddings index
-        embeddings.index(Index.stream(dbfile, maxsize))
+        embeddings.index(Index.stream(dbfile, maxsize, scoring))
 
         return embeddings
 
