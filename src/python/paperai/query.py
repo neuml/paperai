@@ -244,11 +244,11 @@ class Query:
         # Create console printer
         console = Console(soft_wrap=True)
         with console.capture() as capture:
-            # Query
+            # Print query
             console.print(f"[dark_orange]Query: {query}[/dark_orange]")
             console.print()
 
-            # Find for best matches
+            # Execute query
             results = Query.search(embeddings, cur, query, topn, threshold)
 
             # Extract top sections as highlights
