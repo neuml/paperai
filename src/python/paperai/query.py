@@ -243,7 +243,7 @@ class Query:
 
         # Create console printer
         console = Console(soft_wrap=True)
-        with console.capture() as capture:
+        with console.capture() as output:
             # Print query
             console.print(f"[dark_orange]Query: {query}[/dark_orange]")
             console.print()
@@ -296,7 +296,7 @@ class Query:
                 console.print()
 
         # Print console output
-        print(capture.get())
+        print(output.get())
 
     @staticmethod
     def run(query, topn=None, path=None, threshold=None):
