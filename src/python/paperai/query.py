@@ -6,8 +6,7 @@ import datetime
 import re
 import sys
 
-import html2markdown
-import mdv
+from rich.console import Console
 
 from txtai.pipeline import Tokenizer
 
@@ -19,89 +18,6 @@ class Query:
     """
     Methods to query an embeddings index.
     """
-
-    @staticmethod
-    def markdown(text):
-        """
-        Converts html text to markdown.
-
-        Args:
-            text: html text
-
-        Returns:
-            text as markdown
-        """
-
-        # Remove rel attributes as they are not supported by html2markdown
-        text = re.sub(r' rel=".+?">', ">", text)
-
-        # Convert html to markdown
-        text = html2markdown.convert(text)
-
-        # Decode [<>&] characters
-        return text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
-
-    @staticmethod
-    def escape(text):
-        """
-        Escapes text to work around issues with mdv double escaping characters.
-
-        Args:
-            text: input text
-
-        Returns:
-            escaped text
-        """
-
-        text = text.replace("<", "¿")
-        text = text.replace(">", "Ñ")
-        text = text.replace("&", "ž")
-
-        return text
-
-    @staticmethod
-    def unescape(text):
-        """
-        Un-escapes text to work around issues with mdv double escaping characters.
-
-        Args:
-            text: input text
-
-        Returns:
-            unescaped text
-        """
-
-        text = text.replace("¿", "<")
-        text = text.replace("Ñ", ">")
-        text = text.replace("ž", "&")
-
-        return text
-
-    @staticmethod
-    def render(text, theme="592.2129", html=True, tab_length=0):
-        """
-        Renders input text to formatted text ready to send to the terminal.
-
-        Args:
-            text: input html text
-
-        Returns:
-            text formatted for print to terminal
-        """
-
-        if html:
-            # Convert html to markdown
-            text = Query.markdown(text)
-            text = Query.escape(text)
-
-        text = mdv.main(
-            text, theme=theme, c_theme="953.3567", cols=180, tab_length=tab_length
-        )
-
-        if html:
-            text = Query.unescape(text)
-
-        return text.strip()
 
     @staticmethod
     def search(embeddings, cur, query, topn, threshold):
@@ -325,49 +241,62 @@ class Query:
 
         cur = db.cursor()
 
-        print(Query.render(f"#Query: {query}", theme="729.8953") + "\n")
+        # Create console printer
+        console = Console(soft_wrap=True)
+        with console.capture() as capture:
+            # Query
+            console.print(f"[dark_orange]Query: {query}[/dark_orange]")
+            console.print()
 
-        # Query for best matches
-        results = Query.search(embeddings, cur, query, topn, threshold)
+            # Find for best matches
+            results = Query.search(embeddings, cur, query, topn, threshold)
 
-        # Extract top sections as highlights
-        highlights = Query.highlights(results, int(topn / 5))
-        if highlights:
-            print(Query.render("# Highlights"))
-            for highlight in highlights:
-                print(Query.render(f"## - {Query.text(highlight)}"))
+            # Extract top sections as highlights
+            highlights = Query.highlights(results, int(topn / 5))
+            if highlights:
+                console.print("[deep_sky_blue1]Highlights[/deep_sky_blue1]")
+                for highlight in highlights:
+                    console.print(
+                        (f"[bright_blue] - {Query.text(highlight)}[/bright_blue]")
+                    )
 
-            print()
+                console.print()
 
-        # Get results grouped by document
-        documents = Query.documents(results, topn)
+            # Get results grouped by document
+            documents = Query.documents(results, topn)
 
-        print(Query.render("# Articles") + "\n")
+            # Article header
+            console.print("[deep_sky_blue1]Articles[/deep_sky_blue1]")
+            console.print()
 
-        # Print each result, sorted by max score descending
-        for uid in sorted(
-            documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True
-        ):
-            cur.execute(
-                "SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?",
-                [uid],
-            )
-            article = cur.fetchone()
-
-            print(f"Title: {article[0]}")
-            print(f"Published: {Query.date(article[1])}")
-            print(f"Publication: {article[2]}")
-            print(f"Entry: {article[3]}")
-            print(f"Id: {article[4]}")
-            print(f"Reference: {article[5]}")
-
-            # Print top matches
-            for score, text in documents[uid]:
-                print(
-                    Query.render(f"## - ({score:.4f}): {Query.text(text)}", html=False)
+            # Print each result, sorted by max score descending
+            for uid in sorted(
+                documents, key=lambda k: sum(x[0] for x in documents[k]), reverse=True
+            ):
+                cur.execute(
+                    "SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?",
+                    [uid],
                 )
+                article = cur.fetchone()
 
-            print()
+                console.print(f"Title: {article[0]}", highlight=False)
+                console.print(f"Published: {Query.date(article[1])}", highlight=False)
+                console.print(f"Publication: {article[2]}", highlight=False)
+                console.print(f"Entry: {article[3]}", highlight=False)
+                console.print(f"Id: {article[4]}", highlight=False)
+                console.print(f"Reference: {article[5]}")
+
+                # Print top matches
+                for score, text in documents[uid]:
+                    console.print(
+                        f"[bright_blue] - ({score:.4f}): {Query.text(text)}[/bright_blue]",
+                        highlight=False,
+                    )
+
+                console.print()
+
+        # Print console output
+        print(capture.get())
 
     @staticmethod
     def run(query, topn=None, path=None, threshold=None):
