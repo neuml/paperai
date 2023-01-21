@@ -31,7 +31,7 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai builds semantic search and workflow applications for medical/scientific papers. paperai applications range from semantic search indexes that find matches for medical/scientific queries to full-fledged reporting applications powered by machine learning.
+paperai is a semantic search and workflow application for medical/scientific papers. paperai applications range from semantic search indexes that find matches for medical/scientific queries to full-fledged reporting applications powered by machine learning.
 
 ![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture.png#gh-light-mode-only)
 ![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture-dark.png#gh-dark-mode-only)
@@ -89,8 +89,6 @@ The following notebooks and applications demonstrate the capabilities provided b
 
 | Notebook     |      Description      |
 |:----------|:-------------|
-| [CORD-19 Analysis with Sentence Embeddings](https://www.kaggle.com/davidmezzetti/cord-19-analysis-with-sentence-embeddings) | Builds paperai-based submissions for the CORD-19 Challenge |
-| [CORD-19 Report Builder](https://www.kaggle.com/davidmezzetti/cord-19-report-builder) | Template for building new reports |
 
 ### Applications
 
@@ -100,38 +98,41 @@ The following notebooks and applications demonstrate the capabilities provided b
 
 ## Building a model
 
-paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). paperai currently supports querying SQLite databases.
+paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). The following shows how to create a new paperai index.
 
-The following sections show how to build an embeddings index for a SQLite articles database. This example assumes the database and model path is cord19/models. Substitute as appropriate.
+1. (Optional) Create an index.yml file
 
-1. Get vector model
-
-    Run following script to download [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
+    paperai uses the default txtai embeddings configuration when not specified. Alternatively, an index.yml file can be specified that takes all the same options as a txtai embeddings instance. See the [txtai documentation](https://neuml.github.io/txtai/embeddings/configuration) for more on the possible options. A simple example is shown below.
 
     ```
-    scripts/getvectors.sh cord19/vectors
-    ```
-
-    A full vector model build for fastText models can optionally be run with the following command.
-
-    ```
-    python -m paperai.vectors cord19/models
+    path: sentence-transformers/all-MiniLM-L6-v2
+    content: True
     ```
 
 2. Build embeddings index
 
     ```
-    python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
+    python -m paperai.index <path to input data> <optional index configuration>
     ```
 
-The paperai.index process takes two required arguments, the model path and the vector model path. In this case, the vector model is a CORD-19 fastText model but it can also be any supported [transformers model](https://huggingface.co/models?pipeline_tag=sentence-similarity).
+The paperai.index process requires an input data path and optionally takes index configuration. This configuration can either be a vector model path or an index.yml configuration file.
+
+## Running queries
+
+The fastest way to run queries is to start a paperai shell
+
+```
+paperai <path to model directory>
+```
+
+A prompt will come up. Queries can be typed directly into the console.
 
 ## Building a report file
 
 Reports support generating output in multiple formats. An example report call:
 
 ```
-python -m paperai.report report.yml 50 md cord19/models
+python -m paperai.report report.yml 50 md <path to model directory>
 ```
 
 The following report formats are supported:
@@ -142,19 +143,9 @@ The following report formats are supported:
 
 In the example above, a file named report.md will be created. Example report configuration files can be found [here](https://github.com/neuml/cord19q/tree/master/tasks).
 
-## Running queries
-
-The fastest way to run queries is to start a paperai shell
-
-```
-paperai cord19/models
-```
-
-A prompt will come up. Queries can be typed directly into the console.
-
 ## Tech Overview
 
-The model is a combination of a sentence embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Sentence embeddings are built over the full corpus. The sentence embeddings index only uses tagged articles, which helps produce the most relevant results.
+paperai is a combination of an embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Embeddings are built over the full corpus. The embeddings index only uses tagged articles, which helps produce the most relevant results.
 
 Multiple entry points exist to interact with the model.
 
