@@ -257,7 +257,8 @@ class Query:
                 console.print("[deep_sky_blue1]Highlights[/deep_sky_blue1]")
                 for highlight in highlights:
                     console.print(
-                        (f"[bright_blue] - {Query.text(highlight)}[/bright_blue]")
+                        (f"[bright_blue] - {Query.text(highlight)}[/bright_blue]"),
+                        highlight=False,
                     )
 
                 console.print()
