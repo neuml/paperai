@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">
-    <p>AI-powered literature discovery and review engine for medical/scientific papers</p>
+    <p>Semantic search and workflows for medical/scientific papers</p>
 </h3>
 
 <p align="center">
@@ -31,27 +31,32 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is an AI-powered literature discovery and review engine for medical/scientific papers. paperai helps automate tedious literature reviews allowing researchers to focus on their core work. Queries are run to filter papers with specified criteria. Reports powered by extractive question-answering are run to identify answers to key questions within sets of medical/scientific papers.
+paperai builds semantic search and workflow applications for medical/scientific papers. paperai applications range from semantic search indexes that find matches for medical/scientific queries to full-fledged reporting applications powered by machine learning.
 
-paperai was used to analyze the COVID-19 Open Research Dataset (CORD-19), winning multiple awards in the CORD-19 Kaggle challenge.
+![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture.png#gh-light-mode-only)
+![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture-dark.png#gh-dark-mode-only)
 
 paperai and/or NeuML has been recognized in the following articles:
 
-- [CORD-19 Kaggle Challenge Awards](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge/discussion/161447)
 - [Machine-Learning Experts Delve Into 47,000 Papers on Coronavirus Family](https://www.wsj.com/articles/machine-learning-experts-delve-into-47-000-papers-on-coronavirus-family-11586338201)
 - [Data scientists assist medical researchers in the fight against COVID-19](https://cloud.google.com/blog/products/ai-machine-learning/how-kaggle-data-scientists-help-with-coronavirus)
+- [CORD-19 Kaggle Challenge Awards](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge/discussion/161447)
 
 ## Installation
 
 The easiest way to install is via pip and PyPI
 
-    pip install paperai
+```
+pip install paperai
+```
 
 Python 3.7+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
 
 paperai can also be installed directly from GitHub to access the latest, unreleased features.
 
-    pip install git+https://github.com/neuml/paperai
+```
+pip install git+https://github.com/neuml/paperai
+```
 
 See [this link](https://neuml.github.io/txtai/install/#environment-specific-prerequisites) to help resolve environment-specific install issues.
 
@@ -61,7 +66,7 @@ A Dockerfile with commands to install paperai, all dependencies and scripts is a
 
 Clone this git repository and run the following to build and run the Docker image.
 
-```bash
+```
 docker build -t paperai -f docker/Dockerfile .
 docker run --name paperai --rm -it paperai
 ```
@@ -70,7 +75,7 @@ This will bring up a paperai command shell. Standard Docker commands can be used
 
 [paperetl's Dockerfile](https://github.com/neuml/paperetl#docker) can be combined with this Dockerfile to have a single image that can index and query content. The files from the paperetl project scripts directory needs to be placed in paperai's scripts directory. The paperetl Dockerfile also needs to be copied over (it's referenced as paperetl.Dockerfile here).
 
-```bash
+```
 docker build -t base -f docker/Dockerfile .
 docker build -t paperai --build-arg BASE_IMAGE=base -f docker/paperetl.Dockerfile .
 docker run --name paperai --rm -it paperai
@@ -103,19 +108,19 @@ The following sections show how to build an embeddings index for a SQLite articl
 
     Run following script to download [CORD-19 fastText vectors](https://github.com/neuml/paperai/releases/download/v1.3.0/cord19-300d.magnitude.gz)
 
-    ```bash
+    ```
     scripts/getvectors.sh cord19/vectors
     ```
 
     A full vector model build for fastText models can optionally be run with the following command.
 
-    ```bash
+    ```
     python -m paperai.vectors cord19/models
     ```
 
 2. Build embeddings index
 
-    ```bash
+    ```
     python -m paperai.index cord19/models cord19/vectors/cord19-300d.magnitude
     ```
 
@@ -125,7 +130,9 @@ The paperai.index process takes two required arguments, the model path and the v
 
 Reports support generating output in multiple formats. An example report call:
 
-    python -m paperai.report report.yml 50 md cord19/models
+```
+python -m paperai.report report.yml 50 md cord19/models
+```
 
 The following report formats are supported:
 
@@ -139,7 +146,9 @@ In the example above, a file named report.md will be created. Example report con
 
 The fastest way to run queries is to start a paperai shell
 
-    paperai cord19/models
+```
+paperai cord19/models
+```
 
 A prompt will come up. Queries can be typed directly into the console.
 
