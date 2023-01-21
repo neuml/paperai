@@ -31,7 +31,9 @@
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
-paperai is a semantic search and workflow application for medical/scientific papers. paperai applications range from semantic search indexes that find matches for medical/scientific queries to full-fledged reporting applications powered by machine learning.
+paperai is a semantic search and workflow application for medical/scientific papers.
+
+Applications range from semantic search indexes that find matches for medical/scientific queries to full-fledged reporting applications powered by machine learning.
 
 ![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture.png#gh-light-mode-only)
 ![architecture](https://raw.githubusercontent.com/neuml/paperai/master/images/architecture-dark.png#gh-dark-mode-only)
