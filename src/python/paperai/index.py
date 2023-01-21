@@ -11,6 +11,7 @@ import yaml
 
 from txtai.embeddings import Embeddings
 from txtai.pipeline import Tokenizer
+from txtai.vectors import WordVectors
 
 
 class Index:
@@ -83,7 +84,7 @@ class Index:
         Builds embeddings configuration.
 
         Args:
-            vectors: path to word vectors or configuration
+            vectors: vector model path or configuration
 
         Returns:
             configuration
@@ -98,8 +99,12 @@ class Index:
             with open(vectors, "r", encoding="utf-8") as f:
                 return yaml.safe_load(f)
 
-        # Default configuration
-        return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
+        # Configuration for word vectors model
+        if WordVectors.isdatabase(vectors):
+            return {"path": vectors, "scoring": "bm25", "pca": 3, "quantize": True}
+
+        # Use vector path if provided, else use default txtai configuration
+        return {"path": vectors} if vectors else None
 
     @staticmethod
     def embeddings(dbfile, vectors, maxsize):

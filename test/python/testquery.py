@@ -17,6 +17,14 @@ class TestQuery(unittest.TestCase):
     Query tests
     """
 
+    def testEmpty(self):
+        """
+        Test empty fields.
+        """
+
+        self.assertEqual(Query.authors(None), None)
+        self.assertEqual(Query.date(None), None)
+
     def testRun(self):
         """
         Test query execution

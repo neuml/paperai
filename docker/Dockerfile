@@ -20,17 +20,8 @@ RUN ln -sf /usr/bin/python3.7 /usr/bin/python && \
 # Cleanup build packages
 RUN apt-get -y purge gcc g++ python3-dev && apt-get -y autoremove
 
-# Copy paperai scripts
-RUN mkdir -p scripts
-COPY scripts/ ./scripts/
-
 # Create paperetl directories
-RUN mkdir -p cord19/data cord19/report && \
-    mkdir -p paperetl/data paperetl/report
-
-# Install vector model
-RUN scripts/getvectors.sh cord19/models && \
-    scripts/getvectors.sh paperetl/models
+RUN mkdir -p paperetl/data paperetl/report
 
 # Start script
 ENTRYPOINT /bin/bash
