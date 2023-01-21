@@ -26,7 +26,7 @@ class Shell(Cmd):
         self.path = path
 
     def preloop(self):
-        # Load embeddings and questions.db
+        # Load embeddings and articles.sqlite
         self.embeddings, self.db = Models.load(self.path)
 
     def postloop(self):
@@ -44,8 +44,11 @@ def main(path=None):
         path: model path
     """
 
+    if not path and len(sys.argv) > 1:
+        path = sys.argv[1]
+
     Shell(path).cmdloop()
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else None)
+    main()
