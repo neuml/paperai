@@ -3,6 +3,10 @@ FROM $BASE_IMAGE
 LABEL maintainer="NeuML"
 LABEL repository="paperai"
 
+# Argument for ENTRYPOINT
+ARG START=/bin/bash
+ENV START=${START}
+
 # Locale environment variables
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -24,4 +28,4 @@ RUN apt-get -y purge gcc g++ python3-dev && apt-get -y autoremove
 RUN mkdir -p paperetl/data paperetl/report
 
 # Start script
-ENTRYPOINT /bin/bash
+ENTRYPOINT ${START}
