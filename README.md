@@ -85,8 +85,9 @@ The following notebooks and applications demonstrate the capabilities provided b
 
 ### Notebooks
 
-| Notebook     |      Description      |
-|:----------|:-------------|
+| Notebook  | Description  |       |
+|:----------|:-------------|------:|
+| [Introducing paperai](https://github.com/neuml/paperai/blob/master/examples/01_Introducing_paperai.ipynb) | Overview of the functionality provided by paperai | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/neuml/paperai/blob/master/examples/01_Introducing_paperai.ipynb) |
 
 ### Applications
 
@@ -143,10 +144,10 @@ In the example above, a file named report.md will be created. Example report con
 
 ## Tech Overview
 
-paperai is a combination of an embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Embeddings are built over the full corpus. The embeddings index only uses tagged articles, which helps produce the most relevant results.
+paperai is a combination of a [txtai](https://github.com/neuml/txtai) embeddings index and a SQLite database with the articles. Each article is parsed into sentences and stored in SQLite along with the article metadata. Embeddings are built over the full corpus.
 
 Multiple entry points exist to interact with the model.
 
-- paperai.report - Builds a markdown report for a series of queries. For each query, the best articles are shown, top matches from those articles and a highlights section which shows the most relevant sections from the embeddings search for the query.
+- paperai.report - Builds a report for a series of queries. For each query, the top scoring articles are shown along with matches from those articles. There is also a highlights section showing the most relevant results.
 - paperai.query - Runs a single query from the terminal
 - paperai.shell - Allows running multiple queries from the terminal
