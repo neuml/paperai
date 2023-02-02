@@ -29,6 +29,8 @@ class Report:
 
         # Store references to embeddings index and open database cursor
         self.embeddings = embeddings
+        self.scoring = self.embeddings.scoring
+
         self.cur = db.cursor()
 
         # Report options
@@ -42,7 +44,7 @@ class Report:
         )
         self.labels = Labels(model=self.similarity) if self.similarity else None
 
-        # Extractive question-answering model
+        # Question-answering model
         # Determine if embeddings or a custom similarity model should be used to build question context
         self.extractor = Extractor(
             self.similarity if self.similarity else self.embeddings,
@@ -346,7 +348,8 @@ class Report:
         sections = []
         for sid, name, text in self.cur.fetchall():
             if (
-                not name
+                not self.scoring
+                or not name
                 or not re.search(Index.SECTION_FILTER, name.lower())
                 or self.options.get("allsections")
             ):
