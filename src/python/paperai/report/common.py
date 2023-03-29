@@ -226,11 +226,12 @@ class Report:
                 fields[name] = ""
 
         # Add extraction fields
-        for name, value in self.extractor(extractions, texts):
-            # Resolves the full value based on column parameters
-            fields[name] = (
-                self.resolve(params, sections, uid, name, value) if value else ""
-            )
+        if extractions:
+            for name, value in self.extractor(extractions, texts):
+                # Resolves the full value based on column parameters
+                fields[name] = (
+                    self.resolve(params, sections, uid, name, value) if value else ""
+                )
 
         # Add question fields
         names, qa, contexts, snippets = [], [], [], []
