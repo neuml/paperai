@@ -14,7 +14,7 @@ setup(
     name="paperai",
     version="2.2.0",
     author="NeuML",
-    description="AI-powered literature discovery and review engine for medical/scientific papers",
+    description="Semantic search and workflows for medical/scientific papers",
     long_description=DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/neuml/paperai",
