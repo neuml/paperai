@@ -2,7 +2,8 @@
 from setuptools import find_packages, setup
 
 with open("README.md", "r", encoding="utf-8") as f:
-    DESCRIPTION = f.read()
+    # Remove GitHub dark mode images
+    DESCRIPTION = "".join([line for line in f if "gh-dark-mode-only" not in line])
 
 # Optional dependencies
 extras = {}
@@ -12,7 +13,7 @@ extras["dev"] = ["black", "coverage", "coveralls", "httpx", "pre-commit", "pylin
 
 setup(
     name="paperai",
-    version="2.3.0",
+    version="2.2.1",
     author="NeuML",
     description="Semantic search and workflows for medical/scientific papers",
     long_description=DESCRIPTION,
