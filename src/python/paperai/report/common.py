@@ -29,7 +29,6 @@ class Report:
 
         # Store references to embeddings index and open database cursor
         self.embeddings = embeddings
-        self.scoring = self.embeddings.scoring
 
         self.cur = db.cursor()
 
@@ -349,7 +348,7 @@ class Report:
         sections = []
         for sid, name, text in self.cur.fetchall():
             if (
-                not self.scoring
+                not self.embeddings.isweighted()
                 or not name
                 or not re.search(Index.SECTION_FILTER, name.lower())
                 or self.options.get("allsections")

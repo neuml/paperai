@@ -57,7 +57,7 @@ class Query:
         ]
 
         # Tokenize search query, if necessary
-        query = Tokenizer.tokenize(query) if embeddings.scoring else query
+        query = Tokenizer.tokenize(query) if embeddings.isweighted() else query
 
         # Retrieve topn * 5 to account for duplicate matches
         for result in embeddings.search(query, topn * 5):

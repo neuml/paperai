@@ -122,7 +122,7 @@ class Index:
 
         # Read config and create Embeddings instance
         embeddings = Embeddings(Index.config(vectors))
-        scoring = embeddings.scoring
+        scoring = embeddings.isweighted()
 
         # Build scoring index if scoring method provided
         if scoring:

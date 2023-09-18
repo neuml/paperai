@@ -40,7 +40,7 @@ setup(
         "regex>=2020.5.14",
         "rich>=12.0.1",
         "text2digits>=0.1.0",
-        "txtai[api,similarity]>=4.3.1",
+        "txtai[api,similarity]>=6.0.0",
         "txtmarker>=1.0.0",
     ],
     extras_require=extras,
