@@ -17,10 +17,6 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install dependencies - macOS
-        run: brew install libomp
-        if: matrix.os == 'macos-latest'
-
       - name: Install dependencies - Windows
         run: choco install wget
         if: matrix.os == 'windows-latest'
