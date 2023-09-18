@@ -29,7 +29,6 @@ class Report:
 
         # Store references to embeddings index and open database cursor
         self.embeddings = embeddings
-
         self.cur = db.cursor()
 
         # Report options
