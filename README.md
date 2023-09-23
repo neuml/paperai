@@ -2,9 +2,9 @@
     <img src="https://raw.githubusercontent.com/neuml/paperai/master/logo.png"/>
 </p>
 
-<h3 align="center">
-    <p>Semantic search and workflows for medical/scientific papers</p>
-</h3>
+<p align="center">
+    <b>Semantic search and workflows for medical/scientific papers</b>
+</p>
 
 <p align="center">
     <a href="https://github.com/neuml/paperai/releases">
