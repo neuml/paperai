@@ -353,7 +353,7 @@ class Report:
                 or self.options.get("allsections")
             ):
                 # Check that section has at least 1 token
-                if Tokenizer.tokenize(text):
+                if text and Tokenizer.tokenize(text):
                     sections.append((sid, text))
 
         return sections
