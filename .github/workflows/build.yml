@@ -23,9 +23,8 @@ jobs:
 
       - name: Build
         run: |
-          pip install -U pip wheel
-          pip install .[dev]
-          python -c "import nltk; nltk.download('punkt')"
+          pip install -U wheel coverage coveralls
+          pip install .
           python --version
           make data coverage
         env:
