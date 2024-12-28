@@ -13,7 +13,7 @@ extras["dev"] = ["black", "coverage", "coveralls", "httpx", "pre-commit", "pylin
 
 setup(
     name="paperai",
-    version="2.3.0",
+    version="2.4.0",
     author="NeuML",
     description="Semantic search and workflows for medical/scientific papers",
     long_description=DESCRIPTION,
@@ -27,7 +27,7 @@ setup(
     license="Apache 2.0: http://www.apache.org/licenses/LICENSE-2.0",
     packages=find_packages(where="src/python"),
     package_dir={"": "src/python"},
-    keywords="search embedding machine-learning nlp covid-19 medical scientific papers",
+    keywords="search embedding machine-learning nlp medical scientific papers",
     python_requires=">=3.9",
     entry_points={
         "console_scripts": [
