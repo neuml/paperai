@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: |
           pip install -U wheel coverage coveralls
-          pip install .
+          pip install . fasttext==0.9.2
           python --version
           make data coverage
         env:
