@@ -4,7 +4,12 @@ Column module tests
 
 import unittest
 
+from paperai.models import Models
 from paperai.report.column import Column
+from paperai.report.common import Report
+
+# pylint: disable=C0411
+from utils import Utils
 
 
 class TestColumn(unittest.TestCase):
@@ -12,20 +17,9 @@ class TestColumn(unittest.TestCase):
     Column tests
     """
 
-    def testInteger(self):
-        """
-        Tests parsing integers from strings.
-        """
-
-        self.assertEqual(Column.integer("Twenty Three"), "23")
-        self.assertEqual(Column.integer("Two hundred and twelve"), "212")
-        self.assertEqual(Column.integer("4,000,234"), "4000234")
-        self.assertEqual(Column.integer("23"), "23")
-        self.assertEqual(Column.integer("30 days"), None)
-
     def testCategorical(self):
         """
-        Tests generating categorical strings.
+        Test generating categorical strings.
         """
 
         def model(text, labels):
@@ -41,12 +35,8 @@ class TestColumn(unittest.TestCase):
 
         self.assertEqual(Column.duration("2021-01-01 to 2021-01-31", "days"), 30)
         self.assertEqual(Column.duration("2021-01-01 to 2021-01-31", "months"), 1)
-        self.assertEqual(
-            round(Column.duration("2021-01-01 to 2021-01-31", "weeks"), 2), 4.29
-        )
-        self.assertEqual(
-            round(Column.duration("2021-01-01 to 2021-01-31", "years"), 2), 0.08
-        )
+        self.assertEqual(round(Column.duration("2021-01-01 to 2021-01-31", "weeks"), 2), 4.29)
+        self.assertEqual(round(Column.duration("2021-01-01 to 2021-01-31", "years"), 2), 0.08)
 
     def testDurationStartEndNoYear(self):
         """
@@ -76,3 +66,26 @@ class TestColumn(unittest.TestCase):
 
         self.assertEqual(Column.duration("30 moons", "days"), None)
         self.assertEqual(Column.convert("30", "moons", "days"), "30")
+
+    def testInteger(self):
+        """
+        Test parsing integers from strings.
+        """
+
+        self.assertEqual(Column.integer("Twenty Three"), "23")
+        self.assertEqual(Column.integer("Two hundred and twelve"), "212")
+        self.assertEqual(Column.integer("4,000,234"), "4000234")
+        self.assertEqual(Column.integer("23"), "23")
+        self.assertEqual(Column.integer("30 days"), None)
+
+    def testResolve(self):
+        """
+        Test resolving column types
+        """
+
+        embeddings, db = Models.load(Utils.PATH)
+        report = Report(embeddings, db, {})
+
+        for name, dtype in [("int", "int"), ("list", ["a", "b"]), ("days", "days")]:
+            params = [(name, None, None, None, None, None, None, dtype)]
+            report.resolve(params, [], 0, name, "3")

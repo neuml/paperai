@@ -28,9 +28,7 @@ class TestIndex(unittest.TestCase):
         with open(config, "w", encoding="utf-8") as output:
             output.write("path: sentence-transformers/all-MiniLM-L6-v2")
 
-        self.assertEqual(
-            Index.config(config), {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-        )
+        self.assertEqual(Index.config(config), {"path": "sentence-transformers/all-MiniLM-L6-v2"})
 
         # Test word vectors
         self.assertEqual(

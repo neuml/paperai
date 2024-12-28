@@ -52,7 +52,7 @@ The easiest way to install is via pip and PyPI
 pip install paperai
 ```
 
-Python 3.8+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
+Python 3.9+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
 
 paperai can also be installed directly from GitHub to access the latest, unreleased features.
 

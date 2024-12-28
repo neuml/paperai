@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 
 from txtai.api import app, start
 
+from paperai.api import API
 from paperai.index import Index
 
 # pylint: disable=C0411
@@ -53,9 +54,17 @@ class TestAPI(unittest.TestCase):
 
         return client
 
-    def testSearch(self):
+    def testEmpty(self):
         """
-        Test search via API
+        Test empty API search
+        """
+
+        api = API({})
+        self.assertEqual(api.search("query"), None)
+
+    def testSearchFT(self):
+        """
+        Test fasttext search via API
         """
 
         # Build embeddings index
@@ -65,6 +74,30 @@ class TestAPI(unittest.TestCase):
                 "path": Utils.VECTORFILE,
                 "scoring": "bm25",
                 "pca": 3,
+                "faiss": {"nprobe": 6, "components": "IVF100,Flat"},
+            },
+        )
+
+        # Connect to test instance
+        client = TestAPI.start()
+
+        # Run search
+        params = urllib.parse.urlencode({"query": "+hypertension ci", "limit": 1})
+        results = client.get(f"search?{params}").json()
+
+        # Check number of results
+        self.assertEqual(len(results), 1)
+
+    def testSearchVector(self):
+        """
+        Test vector search via API
+        """
+
+        # Build embeddings index
+        Index.run(
+            Utils.PATH,
+            {
+                "path": "sentence-transformers/all-MiniLM-L6-v2",
                 "faiss": {"nprobe": 6, "components": "IVF100,Flat"},
             },
         )

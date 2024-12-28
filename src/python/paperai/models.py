@@ -28,12 +28,11 @@ class Models:
 
         dbfile = os.path.join(path, "articles.sqlite")
 
-        if os.path.isfile(os.path.join(path, "config")):
+        embeddings = None
+        if any(os.path.isfile(os.path.join(path, x)) for x in ["config", "config.json"]):
             print(f"Loading model from {path}")
             embeddings = Embeddings()
             embeddings.load(path)
-        else:
-            embeddings = None
 
         # Connect to database file
         db = sqlite3.connect(dbfile)

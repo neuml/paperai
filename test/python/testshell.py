@@ -19,7 +19,7 @@ class TestShell(unittest.TestCase):
 
     def testShell(self):
         """
-        Tests shell action
+        Test shell action
         """
 
         shell = Shell(Utils.PATH)

@@ -40,9 +40,7 @@ class CSV(Report):
             encoding="utf-8",
         )
 
-        self.writer = csv.writer(
-            self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-        )
+        self.writer = csv.writer(self.csvout, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     def write(self, row):
         """
@@ -80,9 +78,7 @@ class CSV(Report):
         row["Source"] = article[4]
 
         # Top Matches
-        row["Matches"] = (
-            "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
-        )
+        row["Matches"] = "\n\n".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
         row["Entry"] = article[5] if article[5] else ""

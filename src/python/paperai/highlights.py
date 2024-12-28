@@ -133,7 +133,7 @@ class Highlights:
 
         # Tokenize nodes, store uid and tokens
         vectors = []
-        for (uid, text) in nodes:
+        for uid, text in nodes:
             # Custom tokenization that works best with textrank matching
             tokens = Highlights.tokenize(text)
 
@@ -148,9 +148,7 @@ class Highlights:
             node2, tokens2 = pair[1]
 
             # Add a graph edge and compute the cosine similarity for the weight
-            graph.add_edge(
-                node1, node2, weight=Highlights.jaccardIndex(tokens1, tokens2)
-            )
+            graph.add_edge(node1, node2, weight=Highlights.jaccardIndex(tokens1, tokens2))
 
         return graph
 
@@ -183,8 +181,4 @@ class Highlights:
         """
 
         # Remove additional stop words to improve highlighting results
-        return {
-            token
-            for token in Tokenizer.tokenize(text)
-            if token not in Highlights.STOP_WORDS
-        }
+        return {token for token in Tokenizer.tokenize(text) if token not in Highlights.STOP_WORDS}

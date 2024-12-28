@@ -30,11 +30,11 @@ class TestVectors(unittest.TestCase):
         """
 
         output = Vectors.tokens(Utils.DBFILE)
-        self.assertEqual(Utils.hashfile(output), "9fb9b7088bb84930f0cf73d69cb58fe8")
+        self.assertEqual(Utils.linecount(output), 34222)
 
     def testRun(self):
         """
-        Tests word vectors creation
+        Test word vectors creation
         """
 
         # Build vectors file

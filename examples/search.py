@@ -2,7 +2,7 @@
 Search a paperai index.
 
 Requires streamlit and lxml to be installed.
-  pip install streamlit lxml
+  pip install streamlit lxml[html_clean]
 """
 
 import os
@@ -64,12 +64,9 @@ class Application:
             articles = []
 
             # Print each result, sorted by max score descending
-            for uid in sorted(
-                documents, key=lambda k: sum([x[0] for x in documents[k]]), reverse=True
-            ):
+            for uid in sorted(documents, key=lambda k: sum(x[0] for x in documents[k]), reverse=True):
                 cur.execute(
-                    "SELECT Title, Published, Publication, Entry, Id, Reference "
-                    + "FROM articles WHERE id = ?",
+                    "SELECT Title, Published, Publication, Entry, Id, Reference " + "FROM articles WHERE id = ?",
                     [uid],
                 )
                 article = cur.fetchone()
@@ -96,9 +93,7 @@ class Application:
         Runs Streamlit application.
         """
 
-        st.sidebar.image(
-            "https://github.com/neuml/paperai/raw/master/logo.png", width=256
-        )
+        st.sidebar.image("https://github.com/neuml/paperai/raw/master/logo.png", width=256)
         st.sidebar.markdown("## Search parameters")
 
         # Search parameters
@@ -110,19 +105,11 @@ class Application:
             "<style>.small-font { font-size: 0.8rem !important;}</style>",
             unsafe_allow_html=True,
         )
-        st.sidebar.markdown(
-            "<p class='small-font'>Select columns</p>", unsafe_allow_html=True
-        )
-        columns = [
-            column
-            for column, enabled in self.columns
-            if st.sidebar.checkbox(column, enabled)
-        ]
+        st.sidebar.markdown("<p class='small-font'>Select columns</p>", unsafe_allow_html=True)
+        columns = [column for column, enabled in self.columns if st.sidebar.checkbox(column, enabled)]
         if self.embeddings and query:
             df = self.search(query, topn, threshold)
-            st.markdown(
-                f"<p class='small-font'>{len(df)} results</p>", unsafe_allow_html=True
-            )
+            st.markdown(f"<p class='small-font'>{len(df)} results</p>", unsafe_allow_html=True)
 
             if not df.empty:
                 html = df[columns].to_html(escape=False, index=False)

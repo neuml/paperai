@@ -40,30 +40,21 @@ class Query:
             return []
 
         # Default threshold if None
-        threshold = threshold if threshold is not None else 0.6
+        threshold = threshold if threshold is not None else 0.25
 
         results = []
 
         # Get list of required and prohibited tokens
-        must = [
-            token.strip("+")
-            for token in query.split()
-            if token.startswith("+") and len(token) > 1
-        ]
-        mnot = [
-            token.strip("-")
-            for token in query.split()
-            if token.startswith("-") and len(token) > 1
-        ]
+        must = [token.strip("+") for token in query.split() if token.startswith("+") and len(token) > 1]
+        mnot = [token.strip("-") for token in query.split() if token.startswith("-") and len(token) > 1]
 
         # Tokenize search query, if necessary
         query = Tokenizer.tokenize(query) if embeddings.isweighted() else query
 
         # Retrieve topn * 5 to account for duplicate matches
         for result in embeddings.search(query, topn * 5):
-            uid, score = (
-                (result["id"], result["score"]) if isinstance(result, dict) else result
-            )
+            uid, score = (result["id"], result["score"]) if isinstance(result, dict) else result
+
             if score >= threshold:
                 cur.execute("SELECT Article, Text FROM sections WHERE id = ?", [uid])
 
@@ -73,9 +64,7 @@ class Query:
                 # Add result if:
                 #   - all required tokens are present or there are not required tokens AND
                 #   - all prohibited tokens are not present or there are not prohibited tokens
-                if (
-                    not must or all(token.lower() in text.lower() for token in must)
-                ) and (
+                if (not must or all(token.lower() in text.lower() for token in must)) and (
                     not mnot or all(token.lower() not in text.lower() for token in mnot)
                 ):
                     # Save result
@@ -100,7 +89,7 @@ class Query:
         sections = {}
         for uid, score, _, text in results:
             # Filter out lower scored results
-            if score >= 0.35:
+            if score >= 0.1:
                 sections[text] = (uid, text)
 
         # Return up to 5 highlights
@@ -133,9 +122,7 @@ class Query:
             documents[uid] = sorted(list(documents[uid]), reverse=True)
 
         # Get documents with top n best sections
-        topn = sorted(
-            documents, key=lambda k: max([x[0] for x in documents[k]]), reverse=True
-        )[:topn]
+        topn = sorted(documents, key=lambda k: max(x[0] for x in documents[k]), reverse=True)[:topn]
         return {uid: documents[uid] for uid in topn}
 
     @staticmethod
@@ -271,9 +258,7 @@ class Query:
             console.print()
 
             # Print each result, sorted by max score descending
-            for uid in sorted(
-                documents, key=lambda k: sum(x[0] for x in documents[k]), reverse=True
-            ):
+            for uid in sorted(documents, key=lambda k: sum(x[0] for x in documents[k]), reverse=True):
                 cur.execute(
                     "SELECT Title, Published, Publication, Entry, Id, Reference FROM articles WHERE id = ?",
                     [uid],

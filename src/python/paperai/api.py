@@ -30,11 +30,7 @@ class API(txtai.api.API):
         if self.embeddings:
             dbfile = os.path.join(self.config["path"], "articles.sqlite")
             limit = self.limit(request.query_params.get("limit")) if request else 10
-            threshold = (
-                float(request.query_params["threshold"])
-                if request and "threshold" in request.query_params
-                else None
-            )
+            threshold = float(request.query_params["threshold"]) if request and "threshold" in request.query_params else None
 
             with sqlite3.connect(dbfile) as db:
                 cur = db.cursor()
@@ -50,17 +46,16 @@ class API(txtai.api.API):
                 # Print each result, sorted by max score descending
                 for uid in sorted(
                     documents,
-                    key=lambda k: sum([x[0] for x in documents[k]]),
+                    key=lambda k: sum(x[0] for x in documents[k]),
                     reverse=True,
                 ):
                     cur.execute(
-                        "SELECT Title, Published, Publication, Entry, Id, Reference "
-                        + "FROM articles WHERE id = ?",
+                        "SELECT Title, Published, Publication, Entry, Id, Reference " + "FROM articles WHERE id = ?",
                         [uid],
                     )
                     article = cur.fetchone()
 
-                    score = max([score for score, text in documents[uid]])
+                    score = max(score for score, text in documents[uid])
                     matches = [text for _, text in documents[uid]]
 
                     article = {

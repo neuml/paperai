@@ -2,8 +2,6 @@
 Utils module
 """
 
-import hashlib
-
 
 class Utils:
     """
@@ -15,17 +13,16 @@ class Utils:
     VECTORFILE = PATH + "/vectors.magnitude"
 
     @staticmethod
-    def hashfile(path):
+    def linecount(path):
         """
-        Builds a MD5 hash for file at path.
+        Counts the number of lines for file at path.
 
         Args:
             path: full path to file
 
         Returns:
-            MD5 hash
+            number of lines
         """
 
-        with open(path, "r", encoding="utf-8") as data:
-            # Read file into string and build MD5 hash
-            return hashlib.md5(data.read().encode()).hexdigest()
+        with open(path, "r", encoding="utf-8") as f:
+            return len(f.readlines())

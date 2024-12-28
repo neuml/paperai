@@ -4,7 +4,7 @@ Report module
 
 import regex as re
 
-from txtai.pipeline import Extractor, Labels, Similarity, Tokenizer
+from txtai.pipeline import Labels, RAG, Similarity, Tokenizer
 
 from ..index import Index
 from ..query import Query
@@ -37,16 +37,14 @@ class Report:
         # Column names
         self.names = []
 
-        self.similarity = (
-            Similarity(options["similarity"]) if "similarity" in options else None
-        )
+        self.similarity = Similarity(options["similarity"]) if "similarity" in options else None
         self.labels = Labels(model=self.similarity) if self.similarity else None
 
         # Question-answering model
         # Determine if embeddings or a custom similarity model should be used to build question context
-        self.extractor = Extractor(
+        self.rag = RAG(
             self.similarity if self.similarity else self.embeddings,
-            options["qa"] if options["qa"] else "NeuML/bert-small-cord19qa",
+            options["qa"] if options.get("qa") else "NeuML/bert-small-cord19qa",
             minscore=options.get("minscore"),
             mintokens=options.get("mintokens"),
             context=options.get("context"),
@@ -76,9 +74,7 @@ class Report:
             self.separator(output)
 
             # Query for best matches
-            results = Query.search(
-                self.embeddings, self.cur, query, topn, options.get("threshold")
-            )
+            results = Query.search(self.embeddings, self.cur, query, topn, options.get("threshold"))
 
             # Generate highlights section
             self.section(output, "Highlights")
@@ -115,9 +111,7 @@ class Report:
         for highlight in Query.highlights(results, topn):
             # Get matching article
             uid = [article for _, _, article, text in results if text == highlight][0]
-            self.cur.execute(
-                "SELECT Authors, Reference FROM articles WHERE id = ?", [uid]
-            )
+            self.cur.execute("SELECT Authors, Reference FROM articles WHERE id = ?", [uid])
             article = self.cur.fetchone()
 
             # Write out highlight row
@@ -138,9 +132,7 @@ class Report:
         _, query, _ = metadata
 
         # Retrieve list of documents
-        documents = (
-            Query.all(self.cur) if query == "*" else Query.documents(results, topn)
-        )
+        documents = Query.all(self.cur) if query == "*" else Query.documents(results, topn)
 
         # Collect matching rows
         rows = []
@@ -207,7 +199,7 @@ class Report:
                 extractions.append((name, query, question, snippet))
 
         # Run all extractor queries against document text
-        results = self.extractor.query([query for _, query, _ in queries], texts)
+        results = self.rag.query([query for _, query, _ in queries], texts)
 
         # Only execute embeddings queries for columns with matches set
         for x, (name, query, matches) in enumerate(queries):
@@ -216,36 +208,21 @@ class Report:
                 topn = [text for _, text, _ in results[x]][:matches]
 
                 # Join results into String and return
-                value = [
-                    self.resolve(params, sections, uid, name, value) for value in topn
-                ]
+                value = [self.resolve(params, sections, uid, name, value) for value in topn]
                 fields[name] = "\n\n".join(value) if value else ""
             else:
                 fields[name] = ""
 
         # Add extraction fields
         if extractions:
-            for name, value in self.extractor(extractions, texts):
+            for name, value in self.rag(extractions, texts):
                 # Resolves the full value based on column parameters
-                fields[name] = (
-                    self.resolve(params, sections, uid, name, value) if value else ""
-                )
+                fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
         # Add question fields
-        names, qa, contexts, snippets = [], [], [], []
-        for name, query, question, snippet in questions:
-            names.append(name)
-            qa.append(question)
-            contexts.append(fields[query])
-            snippets.append(snippet)
-
-        for name, value in self.extractor.answers(
-            names, qa, contexts, contexts, snippets
-        ):
+        for name, value in self.rag(questions, texts):
             # Resolves the full value based on column parameters
-            fields[name] = (
-                self.resolve(params, sections, uid, name, value) if value else ""
-            )
+            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
         return fields
 
@@ -277,11 +254,7 @@ class Report:
             elif "query" in column:
                 # Query variable substitutions
                 query = self.variables(column["query"], metadata)
-                question = (
-                    self.variables(column["question"], metadata)
-                    if "question" in column
-                    else query
-                )
+                question = self.variables(column["question"], metadata) if "question" in column else query
 
                 # Additional context parameters
                 section = column.get("section", False)
@@ -346,12 +319,7 @@ class Report:
         # Get list of document text sections
         sections = []
         for sid, name, text in self.cur.fetchall():
-            if (
-                not self.embeddings.isweighted()
-                or not name
-                or not re.search(Index.SECTION_FILTER, name.lower())
-                or self.options.get("allsections")
-            ):
+            if not self.embeddings.isweighted() or not name or not re.search(Index.SECTION_FILTER, name.lower()) or self.options.get("allsections"):
                 # Check that section has at least 1 token
                 if Tokenizer.tokenize(text):
                     sections.append((sid, text))

@@ -109,9 +109,7 @@ class Vectors:
         tokens = None
 
         # Stream tokens to temp working file
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".txt", delete=False
-        ) as output:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as output:
             # Save file path
             tokens = output.name
 

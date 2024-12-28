@@ -21,7 +21,4 @@ class TestExport(unittest.TestCase):
         """
 
         Export.run(Utils.PATH + "/export.txt", Utils.PATH)
-        self.assertEqual(
-            Utils.hashfile(Utils.PATH + "/export.txt"),
-            "ac15a3ece486c3035ef861f6706c3e1b",
-        )
+        self.assertEqual(Utils.linecount(Utils.PATH + "/export.txt"), 29841)

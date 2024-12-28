@@ -39,10 +39,7 @@ class Index:
         cur = db.cursor()
 
         # Select sentences from tagged articles
-        query = (
-            Index.SECTION_QUERY
-            + " WHERE article in (SELECT article FROM articles a WHERE a.id = article AND a.tags IS NOT NULL)"
-        )
+        query = Index.SECTION_QUERY + " WHERE article in (SELECT article FROM articles a WHERE a.id = article AND a.tags IS NOT NULL)"
 
         if maxsize > 0:
             query += f" AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT {maxsize})"
@@ -55,11 +52,7 @@ class Index:
             # Unpack row
             uid, name, text = row
 
-            if (
-                not scoring
-                or not name
-                or not re.search(Index.SECTION_FILTER, name.lower())
-            ):
+            if not scoring or not name or not re.search(Index.SECTION_FILTER, name.lower()):
                 # Tokenize text
                 text = Tokenizer.tokenize(text) if scoring else text
 

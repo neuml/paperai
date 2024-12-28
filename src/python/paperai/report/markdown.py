@@ -99,11 +99,7 @@ class Markdown(Report):
         row["Study"] = title
 
         # Top Matches
-        row["Matches"] = (
-            "<br/><br/>".join([Query.text(text) for _, text in sections])
-            if sections
-            else ""
-        )
+        row["Matches"] = "<br/><br/>".join([Query.text(text) for _, text in sections]) if sections else ""
 
         # Entry Date
         row["Entry"] = article[5] if article[5] else ""
