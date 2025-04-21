@@ -38,5 +38,5 @@ class TestVectors(unittest.TestCase):
         """
 
         # Build vectors file
-        Vectors.run(Utils.PATH, 300, 4, Utils.PATH + "/test")
-        self.assertTrue(os.path.getsize(Utils.PATH + "/test.magnitude") > 0)
+        Vectors.run(Utils.PATH, 300, 4, Utils.PATH + "/vectors")
+        self.assertTrue(os.path.getsize(Utils.PATH + "/vectors/model.safetensors") > 0)

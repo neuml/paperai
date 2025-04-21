@@ -8,8 +8,8 @@ import sqlite3
 import sys
 import tempfile
 
+from staticvectors import StaticVectorsTrainer
 from txtai.pipeline import Tokenizer
-from txtai.vectors import WordVectors
 
 
 class RowIterator:
@@ -136,8 +136,9 @@ class Vectors:
         # Stream tokens to temporary file
         tokens = Vectors.tokens(dbfile)
 
-        # Build word vectors model
-        WordVectors.build(tokens, size, mincount, output)
+        # Build staticvectors model - use SQLite storage for backwards compatibility
+        trainer = StaticVectorsTrainer()
+        trainer(tokens, size=size, mincount=mincount, path=output)
 
         # Remove temporary tokens file
         os.remove(tokens)
