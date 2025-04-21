@@ -1,9 +1,9 @@
-ARG BASE_IMAGE=python:3.9-slim
+ARG BASE_IMAGE=python:3.10-slim
 FROM $BASE_IMAGE
 LABEL maintainer="NeuML"
 LABEL repository="paperai"
 
-# Set Python version (i.e. 3, 3.9)
+# Set Python version (i.e. 3, 3.10)
 ARG PYTHON_VERSION=3
 
 # Locale environment variables

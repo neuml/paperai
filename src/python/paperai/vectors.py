@@ -136,7 +136,7 @@ class Vectors:
         # Stream tokens to temporary file
         tokens = Vectors.tokens(dbfile)
 
-        # Build staticvectors model - use SQLite storage for backwards compatibility
+        # Build staticvectors model
         trainer = StaticVectorsTrainer()
         trainer(tokens, size=size, mincount=mincount, path=output)
 
