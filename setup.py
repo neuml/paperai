@@ -28,7 +28,7 @@ setup(
     packages=find_packages(where="src/python"),
     package_dir={"": "src/python"},
     keywords="search embedding machine-learning nlp medical scientific papers",
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     entry_points={
         "console_scripts": [
             "paperai = paperai.shell:main",
@@ -40,8 +40,9 @@ setup(
         "python-dateutil>=2.8.1",
         "regex>=2020.5.14",
         "rich>=12.0.1",
+        "staticvectors[train]>=0.2.0",
         "text2digits>=0.1.0",
-        "txtai[api,similarity]>=8.1.0",
+        "txtai[api,similarity]>=8.5.0",
         "txtmarker>=1.0.0",
     ],
     extras_require=extras,
