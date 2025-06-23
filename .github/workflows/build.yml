@@ -23,6 +23,7 @@ jobs:
       - name: Install dependencies - macOS
         run: |
           echo "OMP_NUM_THREADS=1" >> $GITHUB_ENV
+          echo "KMP_DUPLICATE_LIB_OK=TRUE" >> $GITHUB_ENV
           echo "PYTORCH_MPS_DISABLE=1" >> $GITHUB_ENV
         if: matrix.os == 'macos-latest'
 
