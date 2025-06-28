@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <b>Semantic search and workflows for medical/scientific papers</b>
+    <b>AI for medical/scientific papers</b>
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-paperai is a semantic search and workflow application for medical/scientific papers.
+paperai is an AI application for medical/scientific papers.
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
