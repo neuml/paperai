@@ -15,7 +15,7 @@ setup(
     name="paperai",
     version="2.5.0",
     author="NeuML",
-    description="AI for medical/scientific papers",
+    description="AI for medical and scientific papers",
     long_description=DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/neuml/paperai",

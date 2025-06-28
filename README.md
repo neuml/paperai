@@ -29,7 +29,7 @@
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
-paperai is an AI application for medical/scientific papers.
+paperai is an AI application for medical and scientific papers.
 
 ![demo](https://raw.githubusercontent.com/neuml/paperai/master/demo.png)
 
