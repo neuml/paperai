@@ -13,7 +13,7 @@ extras["dev"] = ["black", "coverage", "coveralls", "httpx", "pre-commit", "pylin
 
 setup(
     name="paperai",
-    version="2.5.0",
+    version="2.6.0",
     author="NeuML",
     description="AI for medical and scientific papers",
     long_description=DESCRIPTION,
