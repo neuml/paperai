@@ -1,0 +1,36 @@
+name: ColonCancer
+options:
+    llm: Intelligent-Internet/II-Medical-8B-1706-GGUF/II-Medical-8B-1706.Q4_K_M.gguf
+    system: You are a medical literature document parser. You extract fields from data.
+    template: |
+        Quickly extract the following field using the provided rules and context.
+
+        Rules:
+          - Keep it simple, don't overthink it
+          - ONLY extract the data
+          - NEVER explain why the field is extracted
+          - NEVER restate the field name only give the field value
+          - Say no data if the field can't be found within the context
+
+        Field:
+        {question}
+
+        Context:
+        {context}
+
+    context: 5
+    params:
+        maxlength: 4096
+        stripthink: True
+
+Research:
+    query: colon cancer young adults
+    columns:
+        - name: Date
+        - name: Study
+        - name: Study Link
+        - name: Journal
+        - {name: Sample Size, query: number of patients, question: Sample Size}
+        - {name: Objective, query: objective, question: Study Objective}
+        - {name: Causes, query: possible causes, question: List of possible causes}
+        - {name: Detection, query: diagnosis, question: List of ways to diagnose}
