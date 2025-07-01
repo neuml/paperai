@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <b>AI for medical/scientific papers</b>
+    <b>AI for medical and scientific papers</b>
 </p>
 
 <p align="center">
