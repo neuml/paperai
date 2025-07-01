@@ -37,17 +37,18 @@ class Report:
         # Column names
         self.names = []
 
+        # Create similarity and labels pipeline, if necessary
         self.similarity = Similarity(options["similarity"]) if "similarity" in options else None
         self.labels = Labels(model=self.similarity) if self.similarity else None
 
-        # Question-answering model
-        # Determine if embeddings or a custom similarity model should be used to build question context
+        # Create RAG pipeline arguments without report options
+        args = {x: options[x] for x in options if x not in ["topn", "render", "path", "qa", "indir", "threshold"]}
+
+        # Retrieval Augmented Generation (RAG) pipeline for calculated fields
         self.rag = RAG(
             self.similarity if self.similarity else self.embeddings,
-            options["qa"] if options.get("qa") else "NeuML/bert-small-cord19qa",
-            minscore=options.get("minscore"),
-            mintokens=options.get("mintokens"),
-            context=options.get("context"),
+            args["llm"] if args.get("llm") else args["qa"] if args.get("qa") else "NeuML/bert-small-cord19qa",
+            **args,
         )
 
     def build(self, queries, options, output):
@@ -215,14 +216,15 @@ class Report:
 
         # Add extraction fields
         if extractions:
-            for name, value in self.rag(extractions, texts):
+            for name, value in self.rag(extractions, texts, **self.options.get("params", {})):
                 # Resolves the full value based on column parameters
                 fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
         # Add question fields
-        for name, value in self.rag(questions, texts):
-            # Resolves the full value based on column parameters
-            fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
+        if questions:
+            for name, value in self.rag(questions, texts, **self.options.get("params", {})):
+                # Resolves the full value based on column parameters
+                fields[name] = self.resolve(params, sections, uid, name, value) if value else ""
 
         return fields
 

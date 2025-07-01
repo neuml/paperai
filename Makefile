@@ -14,7 +14,7 @@ PYTHON ?= python
 # Download test data
 data: 
 	mkdir -p /tmp/paperai
-	wget -N https://github.com/neuml/paperai/releases/download/v1.10.0/tests.tar.gz -P /tmp
+	wget -N https://github.com/neuml/paperai/releases/download/v2.4.0/tests.tar.gz -P /tmp
 	tar -xvzf /tmp/tests.tar.gz -C /tmp
 
 # Unit tests

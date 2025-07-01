@@ -16,7 +16,7 @@ from txtai.vectors import WordVectors
 
 class Index:
     """
-    Methods to build a new sentence embeddings index.
+    Methods to build a new vector embeddings index.
     """
 
     # Section query and filtering logic constants
@@ -24,13 +24,14 @@ class Index:
     SECTION_QUERY = "SELECT Id, Name, Text FROM sections"
 
     @staticmethod
-    def stream(dbfile, maxsize, scoring):
+    def stream(dbfile, maxsize, toprank, scoring):
         """
         Streams documents from an articles.sqlite file. This method is a generator and will yield a row at time.
 
         Args:
             dbfile: input SQLite file
             maxsize: maximum number of documents to process
+            toprank: only index the topn ranked articles by citation count within the dataset
             scoring: True if index uses a scoring model, False otherwise
         """
 
@@ -38,11 +39,14 @@ class Index:
         db = sqlite3.connect(dbfile)
         cur = db.cursor()
 
-        # Select sentences from tagged articles
+        # Select sections from tagged articles
         query = Index.SECTION_QUERY + " WHERE article in (SELECT article FROM articles a WHERE a.id = article AND a.tags IS NOT NULL)"
 
         if maxsize > 0:
             query += f" AND article in (SELECT id FROM articles ORDER BY entry DESC LIMIT {maxsize})"
+
+        if toprank > 0:
+            query += f" AND article in (SELECT reference FROM citations GROUP BY reference ORDER BY count(*) DESC LIMIT {toprank})"
 
         # Run the query
         cur.execute(query)
@@ -100,14 +104,15 @@ class Index:
         return {"path": vectors} if vectors else None
 
     @staticmethod
-    def embeddings(dbfile, vectors, maxsize):
+    def embeddings(dbfile, vectors, maxsize, toprank):
         """
-        Builds a sentence embeddings index.
+        Builds a vector embeddings index.
 
         Args:
             dbfile: input SQLite file
             vectors: path to vectors file or configuration
             maxsize: maximum number of documents to process
+            toprank: only index the topn ranked articles by citation count within the dataset
 
         Returns:
             embeddings index
@@ -119,15 +124,15 @@ class Index:
 
         # Build scoring index if scoring method provided
         if scoring:
-            embeddings.score(Index.stream(dbfile, maxsize, scoring))
+            embeddings.score(Index.stream(dbfile, maxsize, toprank, scoring))
 
         # Build embeddings index
-        embeddings.index(Index.stream(dbfile, maxsize, scoring))
+        embeddings.index(Index.stream(dbfile, maxsize, toprank, scoring))
 
         return embeddings
 
     @staticmethod
-    def run(path, vectors, maxsize=0):
+    def run(path, vectors, maxsize=0, toprank=0):
         """
         Executes an index run.
 
@@ -135,12 +140,13 @@ class Index:
             path: model path
             vectors: path to vectors file or configuration, if None uses default path
             maxsize: maximum number of documents to process
+            toprank: only index the topn ranked articles by citation count within the dataset
         """
 
         dbfile = os.path.join(path, "articles.sqlite")
 
         print("Building new model")
-        embeddings = Index.embeddings(dbfile, vectors, maxsize)
+        embeddings = Index.embeddings(dbfile, vectors, maxsize, toprank)
         embeddings.save(path)
 
 
@@ -149,4 +155,5 @@ if __name__ == "__main__":
         sys.argv[1] if len(sys.argv) > 1 else None,
         sys.argv[2] if len(sys.argv) > 2 else None,
         int(sys.argv[3]) if len(sys.argv) > 3 else 0,
+        int(sys.argv[4]) if len(sys.argv) > 4 else 0,
     )
