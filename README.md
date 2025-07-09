@@ -52,7 +52,7 @@ pip install paperai
 
 Python 3.10+ is supported. Using a Python [virtual environment](https://docs.python.org/3/library/venv.html) is recommended.
 
-paperai can also be installed directly from GitHub to access the latest, unreleased features.
+`paperai` can also be installed directly from GitHub to access the latest, unreleased features.
 
 ```
 pip install git+https://github.com/neuml/paperai
@@ -62,7 +62,7 @@ See [this link](https://neuml.github.io/txtai/install/#environment-specific-prer
 
 ### Docker
 
-Run the steps below to build a docker image with paperai and all dependencies.
+Run the steps below to build a docker image with `paperai` and all dependencies.
 
 ```
 wget https://raw.githubusercontent.com/neuml/paperai/master/docker/Dockerfile
@@ -79,7 +79,7 @@ docker run --name paperai --rm -it paperai
 
 ## Examples
 
-The following notebooks and applications demonstrate the capabilities provided by paperai.
+The following notebooks and applications demonstrate the capabilities provided by `paperai`.
 
 ### Notebooks
 
@@ -92,15 +92,15 @@ The following notebooks and applications demonstrate the capabilities provided b
 
 | Application  | Description  |
 |:----------|:-------------|
-| [Search](https://github.com/neuml/paperai/blob/master/examples/search.py) | Search a paperai index. Set query parameters, execute searches and display results. |
+| [Search](https://github.com/neuml/paperai/blob/master/examples/search.py) | Search a `paperai` index. Set query parameters, execute searches and display results. |
 
 ## Building a model
 
-paperai indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). The following shows how to create a new paperai index.
+`paperai` indexes databases previously built with [paperetl](https://github.com/neuml/paperetl). The following shows how to create a new `paperai` index.
 
 1. (Optional) Create an index.yml file
 
-    paperai uses the default txtai embeddings configuration when not specified. Alternatively, an index.yml file can be specified that takes all the same options as a txtai embeddings instance. See the [txtai documentation](https://neuml.github.io/txtai/embeddings/configuration) for more on the possible options. A simple example is shown below.
+    `paperai` uses the default txtai embeddings configuration when not specified. Alternatively, an index.yml file can be specified that takes all the same options as a txtai embeddings instance. See the [txtai documentation](https://neuml.github.io/txtai/embeddings/configuration) for more on the possible options. A simple example is shown below.
 
     ```
     path: sentence-transformers/all-MiniLM-L6-v2
@@ -117,7 +117,7 @@ The paperai.index process requires an input data path and optionally takes index
 
 ## Running queries
 
-The fastest way to run queries is to start a paperai shell
+The fastest way to run queries is to start a `paperai` shell
 
 ```
 paperai <path to model directory>
@@ -227,7 +227,7 @@ See the [examples](https://github.com/neuml/paperai/tree/master/examples) direct
 
 ## Tech Overview
 
-paperai is a combination of a [txtai](https://github.com/neuml/txtai) embeddings index, a SQLite database with the articles and an LLM. These components are joined together in a [txtai RAG pipeline](https://neuml.github.io/txtai/pipeline/text/rag/).
+`paperai` is a combination of a [txtai](https://github.com/neuml/txtai) embeddings index, a SQLite database with the articles and an LLM. These components are joined together in a [txtai RAG pipeline](https://neuml.github.io/txtai/pipeline/text/rag/).
 
 Each article is parsed into sections and stored in a data store along with the article metadata. Embeddings are built over the full corpus. The LLM analyzes context-limited requests and generates outputs.
 
@@ -239,7 +239,7 @@ Multiple entry points exist to interact with the model.
 
 ## Recognition
 
-paperai and/or NeuML has been recognized in the following articles.
+`paperai` and/or NeuML has been recognized in the following articles.
 
 - [Machine-Learning Experts Delve Into 47,000 Papers on Coronavirus Family](https://www.wsj.com/articles/machine-learning-experts-delve-into-47-000-papers-on-coronavirus-family-11586338201)
 - [Data scientists assist medical researchers in the fight against COVID-19](https://cloud.google.com/blog/products/ai-machine-learning/how-kaggle-data-scientists-help-with-coronavirus)
