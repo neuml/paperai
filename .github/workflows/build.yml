@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-15, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     timeout-minutes: 60
     steps:
@@ -25,7 +25,7 @@ jobs:
           echo "OMP_NUM_THREADS=1" >> $GITHUB_ENV
           echo "KMP_DUPLICATE_LIB_OK=TRUE" >> $GITHUB_ENV
           echo "PYTORCH_MPS_DISABLE=1" >> $GITHUB_ENV
-        if: matrix.os == 'macos-15'
+        if: matrix.os == 'macos-latest'
 
       - name: Install dependencies - Windows
         run: |
@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: |
           pip install -U wheel coverage coveralls
-          pip install .
+          pip install . torch==2.12.1
           python --version
           make data coverage
 
