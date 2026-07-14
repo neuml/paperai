@@ -2,7 +2,6 @@
 Query module
 """
 
-import datetime
 import re
 import sys
 
