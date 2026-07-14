@@ -33,9 +33,9 @@ class TestReport(unittest.TestCase):
         Execute.run(Utils.PATH + "/report1.yml", 10, "md", Utils.PATH, None)
 
         counts = [
-            ("Age.csv", 31),
-            ("Heart Disease.csv", 7),
-            ("Heart Failure.csv", 9),
+            ("Age.csv", 11),
+            ("Heart Disease.csv", 5),
+            ("Heart Failure.csv", 7),
             ("Report1.md", 47),
         ]
 

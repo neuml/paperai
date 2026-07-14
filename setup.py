@@ -40,6 +40,8 @@ setup(
         "python-dateutil>=2.8.1",
         "regex>=2020.5.14",
         "rich>=12.0.1",
+        "scikit-learn>=0.23.1",
+        "skops>=0.9.0",
         "staticvectors[train]>=0.2.0",
         "text2digits>=0.1.0",
         "txtai[api]>=8.5.0",
