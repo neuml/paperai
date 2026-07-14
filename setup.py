@@ -42,7 +42,7 @@ setup(
         "rich>=12.0.1",
         "staticvectors[train]>=0.2.0",
         "text2digits>=0.1.0",
-        "txtai[api,similarity]>=8.5.0",
+        "txtai[api]>=8.5.0",
         "txtmarker>=1.0.0",
     ],
     extras_require=extras,
