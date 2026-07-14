@@ -6,6 +6,7 @@ import datetime
 import re
 import sys
 
+from dateutil import parser
 from rich.console import Console
 
 from txtai.pipeline import Tokenizer
@@ -176,13 +177,16 @@ class Query:
         """
 
         if date:
-            date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            try:
+                parsed = parser.parse(date)
+            except (ValueError, TypeError):
+                return date
 
             # 1/1 dates had no month/day specified, use only year
-            if date.month == 1 and date.day == 1:
-                return date.strftime("%Y")
+            if parsed.month == 1 and parsed.day == 1:
+                return parsed.strftime("%Y")
 
-            return date.strftime("%Y-%m-%d")
+            return parsed.strftime("%Y-%m-%d")
 
         return None
 

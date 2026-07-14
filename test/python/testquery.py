@@ -25,6 +25,16 @@ class TestQuery(unittest.TestCase):
         self.assertEqual(Query.authors(None), None)
         self.assertEqual(Query.date(None), None)
 
+    def testDateFormats(self):
+        """
+        Test multiple date string formats.
+        """
+
+        self.assertEqual(Query.date("2024-01-01 00:00:00"), "2024")
+        self.assertEqual(Query.date("2024-05-02"), "2024-05-02")
+        self.assertEqual(Query.date("2024-05-02T13:45:21Z"), "2024-05-02")
+        self.assertEqual(Query.date("not-a-date"), "not-a-date")
+
     def testRun(self):
         """
         Test query execution
