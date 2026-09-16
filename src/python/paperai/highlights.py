@@ -77,10 +77,16 @@ class Highlights:
 
         results = []
 
+        # Materialize input, it is iterated more than once below
+        sections = list(sections)
+
+        # Build a uid to text lookup
+        lookup = dict(sections)
+
         # Rank the text using textrank for importance within collection
         for uid, _ in Highlights.textrank(sections):
             # Lookup text and tokenize
-            text = [text for u, text in sections if u == uid][0]
+            text = lookup[uid]
             tokens = Highlights.tokenize(text)
 
             # Compare text to existing results, look for highly unique results
@@ -89,10 +95,8 @@ class Highlights:
             if unique:
                 results.append((uid, tokens))
 
-        uids = [uid for uid, _ in results][:topn]
-
-        # Get related text for each match
-        return [text for uid, text in sections if uid in uids]
+        # Get related text for each match, preserving textrank order
+        return [lookup[uid] for uid, _ in results[:topn]]
 
     @staticmethod
     def textrank(sections):
