@@ -42,12 +42,12 @@ class Report:
         self.labels = Labels(model=self.similarity) if self.similarity else None
 
         # Create RAG pipeline arguments without report options
-        args = {x: options[x] for x in options if x not in ["topn", "render", "path", "qa", "indir", "threshold"]}
+        args = {x: options[x] for x in options if x not in ["topn", "render", "path", "qa", "llm", "similarity", "indir", "threshold"]}
 
         # Retrieval Augmented Generation (RAG) pipeline for calculated fields
         self.rag = RAG(
             self.similarity if self.similarity else self.embeddings,
-            args["llm"] if args.get("llm") else args["qa"] if args.get("qa") else "NeuML/bert-small-cord19qa",
+            options.get("llm") or options.get("qa") or "NeuML/bert-small-cord19qa",
             **args,
         )
 
